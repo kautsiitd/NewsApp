@@ -56,6 +56,7 @@
 		636DE07323925C1C00305557 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				636DE0892392647C00305557 /* ViewController */,
 				636DE0882392642500305557 /* Model */,
 				636DE07423925C1C00305557 /* AppDelegate.swift */,
 				636DE07623925C1C00305557 /* SceneDelegate.swift */,
@@ -73,6 +74,13 @@
 			children = (
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		636DE0892392647C00305557 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
