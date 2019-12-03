@@ -62,6 +62,9 @@ extension UIImageView {
         }) {
         guard let url = url else {
             completion(#imageLiteral(resourceName: "NoImage.png"), nil, .none)
+            DispatchQueue.main.async { [weak self] in
+                self?.stopLoader()
+            }
             return
         }
         if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
@@ -76,8 +79,10 @@ extension UIImageView {
                 }
                 imageCache.setObject(image,
                                      forKey: url.absoluteString as NSString)
-                self?.stopLoader()
                 completion(image, url, .downloaded)
+                DispatchQueue.main.async {
+                    self?.stopLoader()
+                }
             })
         }
     }

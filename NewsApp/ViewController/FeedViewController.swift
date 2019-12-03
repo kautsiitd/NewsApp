@@ -68,7 +68,19 @@ extension FeedViewController: FeedProtocol {
     
     func requestFailedWith(error: NSError?) {
         DispatchQueue.main.async { [weak self] in
-            self?.loader.stopAnimating()
+            self?.loader.startAnimating()
+            let alertViewController = UIAlertController(title: error?.domain,
+                                                        message: error?.localizedDescription,
+                                                        preferredStyle: .alert)
+            let retryButton = UIAlertAction(title: "Retry",
+                                            style: .default,
+                                            handler: { _ in
+                                                self?.feed.fetch()
+            })
+            alertViewController.addAction(retryButton)
+            self?.present(alertViewController,
+                          animated: true,
+                          completion: nil)
         }
     }
 }
