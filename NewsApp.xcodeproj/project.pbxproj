@@ -20,6 +20,9 @@
 		63B998AD2392FEBD004BAE66 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B998AC2392FEBD004BAE66 /* BaseClass.swift */; };
 		63B998B02393138C004BAE66 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B998AF2393138C004BAE66 /* UIImageView.swift */; };
 		63E7DAAB2395F36F002ACA93 /* LoaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */; };
+		63E7E7B2239674E300715D97 /* NewsApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63E7E7B0239674E300715D97 /* NewsApp.xcdatamodeld */; };
+		63E7E7B62396751C00715D97 /* ArticleData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E7E7B42396751C00715D97 /* ArticleData+CoreDataClass.swift */; };
+		63E7E7B72396751C00715D97 /* ArticleData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E7E7B52396751C00715D97 /* ArticleData+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,9 @@
 		63B998AC2392FEBD004BAE66 /* BaseClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseClass.swift; sourceTree = "<group>"; };
 		63B998AF2393138C004BAE66 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderTableViewCell.swift; sourceTree = "<group>"; };
+		63E7E7B1239674E300715D97 /* NewsApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NewsApp.xcdatamodel; sourceTree = "<group>"; };
+		63E7E7B42396751C00715D97 /* ArticleData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArticleData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		63E7E7B52396751C00715D97 /* ArticleData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArticleData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +76,7 @@
 		636DE07323925C1C00305557 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				63E7E7B3239674E900715D97 /* Data */,
 				636DE08223925C2200305557 /* Info.plist */,
 				636DE07423925C1C00305557 /* AppDelegate.swift */,
 				636DE07623925C1C00305557 /* SceneDelegate.swift */,
@@ -132,8 +139,18 @@
 				636DE07A23925C1C00305557 /* Main.storyboard */,
 				636DE07D23925C2200305557 /* Assets.xcassets */,
 				636DE07F23925C2200305557 /* LaunchScreen.storyboard */,
+				63E7E7B0239674E300715D97 /* NewsApp.xcdatamodeld */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		63E7E7B3239674E900715D97 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				63E7E7B42396751C00715D97 /* ArticleData+CoreDataClass.swift */,
+				63E7E7B52396751C00715D97 /* ArticleData+CoreDataProperties.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,14 +225,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E7DAAB2395F36F002ACA93 /* LoaderTableViewCell.swift in Sources */,
+				63E7E7B2239674E300715D97 /* NewsApp.xcdatamodeld in Sources */,
 				63B998AB2392FE63004BAE66 /* ApiManager.swift in Sources */,
 				630C164923953BE600349D5A /* Feed.swift in Sources */,
+				63E7E7B62396751C00715D97 /* ArticleData+CoreDataClass.swift in Sources */,
 				63B998AD2392FEBD004BAE66 /* BaseClass.swift in Sources */,
 				630C16452395374000349D5A /* FeedTableViewCell.swift in Sources */,
 				636DE07923925C1C00305557 /* FeedViewController.swift in Sources */,
 				630C164723953B9F00349D5A /* Article.swift in Sources */,
 				636DE07523925C1C00305557 /* AppDelegate.swift in Sources */,
 				63B998B02393138C004BAE66 /* UIImageView.swift in Sources */,
+				63E7E7B72396751C00715D97 /* ArticleData+CoreDataProperties.swift in Sources */,
 				636DE07723925C1C00305557 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,6 +434,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		63E7E7B0239674E300715D97 /* NewsApp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				63E7E7B1239674E300715D97 /* NewsApp.xcdatamodel */,
+			);
+			currentVersion = 63E7E7B1239674E300715D97 /* NewsApp.xcdatamodel */;
+			path = NewsApp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 636DE06923925C1C00305557 /* Project object */;
 }

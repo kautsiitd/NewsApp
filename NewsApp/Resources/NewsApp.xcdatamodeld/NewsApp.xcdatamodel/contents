@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ArticleData" representedClassName=".ArticleData" syncable="YES">
+        <attribute name="title" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="ArticleData" positionX="-54" positionY="-9" width="128" height="58"/>
+    </elements>
+</model>
