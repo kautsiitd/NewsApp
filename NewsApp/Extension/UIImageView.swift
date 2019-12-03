@@ -93,10 +93,11 @@ extension UIImageView {
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             self?.getDataFromUrl(url: url) { data, response, error in
                 guard let data = data,
-                    error == nil,
                     let image = UIImage(data: data) else {
-                    completion(nil)
-                    return
+                        print(url)
+                        print(error?.localizedDescription ?? "")
+                        completion(#imageLiteral(resourceName: "NoImage.png"))
+                        return
                 }
                 completion(image)
             }

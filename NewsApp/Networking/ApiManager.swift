@@ -65,9 +65,7 @@ extension ApiManager {
         }
         var paramsArray: [String] = ["apiKey=\(apiKey)"]
         for (key, value) in params {
-            guard let value = value as? String else {
-                continue
-            }
+            let value = "\(value)"
             paramsArray.append(key+"="+value)
         }
         var url = baseURL

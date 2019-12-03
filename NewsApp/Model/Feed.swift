@@ -26,16 +26,15 @@ class Feed: BaseClass {
     
     //MARK: Available Functions
     func fetch() {
-        let params = ["q": "bitcoin",
-                      "from": "2019-11-03",
-                      "sortBy": "publishedAt"]
+        let params: [String: Any] = ["country": "us",
+                                     "page": 2]
         ApiManager.shared.getRequestWith(params: params,
                                          delegate: self)
     }
     
     //MARK: ApiManagement
     override func getApiEndPoint() -> String {
-        return "everything"
+        return "top-headlines"
     }
     
     override func parse(response: [String : Any]) {
