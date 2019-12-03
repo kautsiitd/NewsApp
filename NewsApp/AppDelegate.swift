@@ -14,7 +14,7 @@ let imageCache = NSCache<NSString, UIImage>()
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        imageCache.countLimit = 20
+        imageCache.countLimit = 40
         return true
     }
 }

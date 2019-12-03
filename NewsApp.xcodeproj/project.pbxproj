@@ -19,6 +19,7 @@
 		63B998AB2392FE63004BAE66 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B998AA2392FE63004BAE66 /* ApiManager.swift */; };
 		63B998AD2392FEBD004BAE66 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B998AC2392FEBD004BAE66 /* BaseClass.swift */; };
 		63B998B02393138C004BAE66 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B998AF2393138C004BAE66 /* UIImageView.swift */; };
+		63E7DAAB2395F36F002ACA93 /* LoaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		63B998AA2392FE63004BAE66 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
 		63B998AC2392FEBD004BAE66 /* BaseClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseClass.swift; sourceTree = "<group>"; };
 		63B998AF2393138C004BAE66 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				630C16442395374000349D5A /* FeedTableViewCell.swift */,
+				63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E7DAAB2395F36F002ACA93 /* LoaderTableViewCell.swift in Sources */,
 				63B998AB2392FE63004BAE66 /* ApiManager.swift in Sources */,
 				630C164923953BE600349D5A /* Feed.swift in Sources */,
 				63B998AD2392FEBD004BAE66 /* BaseClass.swift in Sources */,

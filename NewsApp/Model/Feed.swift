@@ -19,15 +19,18 @@ class Feed: BaseClass {
     private var totalResults: Int = 0
     var articles: [Article] = []
     private var delegate: FeedProtocol
+    private var currentPage: Int = 0
+    var hasReachedEnd: Bool = false
     
     init(delegate: FeedProtocol) {
         self.delegate = delegate
     }
     
     //MARK: Available Functions
-    func fetch() {
+    func fetch(nextPage: Bool) {
+        currentPage += nextPage ? 1:0
         let params: [String: Any] = ["country": "us",
-                                     "page": 2]
+                                     "page": currentPage]
         ApiManager.shared.getRequestWith(params: params,
                                          delegate: self)
     }
@@ -44,6 +47,7 @@ class Feed: BaseClass {
             let article = Article(response: responseElement)
             articles.append(article)
         }
+        hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
     }
     
     override func requestCompletedSuccessfully() {

@@ -24,26 +24,45 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0)
+        tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: "LoaderTableViewCell")
         
         loader.startAnimating()
-        feed.fetch()
+        feed.fetch(nextPage: true)
     }
 }
 
 //MARK: TableView
 extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return feed.articles.count
+        return feed.articles.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "FeedTableViewCell") as? FeedTableViewCell else {
-            return UITableViewCell()
+        if indexPath.row < feed.articles.count {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "FeedTableViewCell") as? FeedTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.delegate = self
+            cell.setCell(article: feed.articles[indexPath.row])
+            return cell
         }
-        cell.delegate = self
-        cell.setCell(article: feed.articles[indexPath.row])
-        return cell
+        else if feed.articles.count > 0 && !feed.hasReachedEnd {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "LoaderTableViewCell") as? LoaderTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.addLoader()
+            return cell
+        }
+        return UITableViewCell()
+    }
+}
+
+extension FeedViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == feed.articles.count && !feed.hasReachedEnd {
+            feed.fetch(nextPage: true)
+        }
     }
 }
 
@@ -75,7 +94,7 @@ extension FeedViewController: FeedProtocol {
             let retryButton = UIAlertAction(title: "Retry",
                                             style: .default,
                                             handler: { _ in
-                                                self?.feed.fetch()
+                                                self?.feed.fetch(nextPage: false)
             })
             alertViewController.addAction(retryButton)
             self?.present(alertViewController,
