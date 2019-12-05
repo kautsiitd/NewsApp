@@ -15,7 +15,7 @@ let imageCache = NSCache<NSString, UIImage>()
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var persistentContainer: NSPersistentContainer = {
-      let container = NSPersistentContainer(name: "PetPal")
+      let container = NSPersistentContainer(name: "NewsApp")
       container.loadPersistentStores(completionHandler: {
         (storeDescription, error) in
           print(storeDescription)

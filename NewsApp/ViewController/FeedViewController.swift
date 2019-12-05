@@ -16,6 +16,11 @@ class FeedViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var loader: UIActivityIndicatorView!
     private var feed: Feed!
+    private var refreshControl: UIRefreshControl!
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -25,10 +30,25 @@ class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0)
-        tableView.register(LoaderTableViewCell.self, forCellReuseIdentifier: "LoaderTableViewCell")
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        tableView?.addSubview(refreshControl)
         
         loader.startAnimating()
-        feed.fetch(nextPage: true)
+        feed.fetch(type: .saved)
+    }
+}
+
+//MARK: IBOutlets
+extension FeedViewController {
+    @IBAction private func refresh() {
+        feed.articles = []
+        feed.fetch(type: .refresh)
+        DispatchQueue.main.async { [weak self] in
+            self?.loader.startAnimating()
+            self?.tableView.reloadData()
+        }
     }
 }
 
@@ -51,7 +71,6 @@ extension FeedViewController: UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "LoaderTableViewCell") as? LoaderTableViewCell else {
                 return UITableViewCell()
             }
-            cell.addLoader()
             return cell
         }
         return UITableViewCell()
@@ -61,7 +80,7 @@ extension FeedViewController: UITableViewDataSource {
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == feed.articles.count && !feed.hasReachedEnd {
-            feed.fetch(nextPage: true)
+            feed.fetch(type: .next)
         }
     }
 }
@@ -81,20 +100,25 @@ extension FeedViewController: FeedProtocol {
     func requestCompletedSuccessfully() {
         DispatchQueue.main.async { [weak self] in
             self?.loader.stopAnimating()
+            self?.refreshControl.endRefreshing()
             self?.tableView.reloadData()
         }
     }
     
     func requestFailedWith(error: NSError?) {
         DispatchQueue.main.async { [weak self] in
-            self?.loader.startAnimating()
+            self?.loader.stopAnimating()
+            self?.refreshControl.endRefreshing()
             let alertViewController = UIAlertController(title: error?.domain,
                                                         message: error?.localizedDescription,
                                                         preferredStyle: .alert)
             let retryButton = UIAlertAction(title: "Retry",
                                             style: .default,
                                             handler: { _ in
-                                                self?.feed.fetch(nextPage: false)
+                                                if self?.feed.currentPage ?? 0 <= 1 {
+                                                    self?.loader.startAnimating()
+                                                }
+                                                self?.feed.fetch(type: .current)
             })
             alertViewController.addAction(retryButton)
             self?.present(alertViewController,

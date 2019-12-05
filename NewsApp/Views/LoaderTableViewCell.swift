@@ -9,15 +9,11 @@
 import UIKit
 
 class LoaderTableViewCell: UITableViewCell {
+    //MARK: Elements
+    @IBOutlet private weak var loader: UIActivityIndicatorView!
     
-    //MARK: Properties
-    private var loader: UIActivityIndicatorView!
-    
-    func addLoader() {
-        loader = UIActivityIndicatorView(style: .medium)
-        loader.center = contentView.center
-        loader.isHidden = false
+    override func awakeFromNib() {
+        super.awakeFromNib()
         loader.startAnimating()
-        contentView.addSubview(loader)
     }
 }
