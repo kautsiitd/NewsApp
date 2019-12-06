@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 class Source {
     //MARK: Properties
@@ -19,28 +20,27 @@ class Source {
     }
 }
 
-class Article {
+class Article: NSManagedObject {
     //MARK: Properties
-    var author: String
-    var title: String
-    var description: String
-    var url: URL?
-    var urlToImage: URL?
-    var publishedAt: String
-    var content: String
+    @NSManaged var author: String
+    @NSManaged var title: String
+    @NSManaged var newsDescription: String
+    @NSManaged var url: URL?
+    @NSManaged var urlToImage: URL?
+    @NSManaged var publishedAt: String
+    @NSManaged var content: String
     
-    init(response: [String: Any?]) {
-        author = response["author"] as? String ?? ""
-        title = response["title"] as? String ?? ""
-        description = response["description"] as? String ?? ""
-        
-        let urlString = response["url"] as? String ?? ""
-        url = URL(string: urlString)
-        
-        let urlToImageString = response["urlToImage"] as? String ?? ""
-        urlToImage = URL(string: urlToImageString)
-        
-        publishedAt = response["publishedAt"] as? String ?? ""
-        content = response["content"] as? String ?? ""
+    @nonobjc class func fetchRequest() -> NSFetchRequest<Article> {
+        return NSFetchRequest<Article>(entityName: "Article")
+    }
+    
+    func setData(articleRemote: ArticleRemote) {
+        author = articleRemote.author
+        title = articleRemote.title
+        newsDescription = articleRemote.description
+        url = articleRemote.url
+        urlToImage = articleRemote.urlToImage
+        publishedAt = articleRemote.publishedAt
+        content = articleRemote.content
     }
 }

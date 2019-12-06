@@ -119,11 +119,15 @@
                                             <subviews>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="Mkv-MC-hGp">
                                                     <rect key="frame" x="197" y="12" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="7m0-fb-jJm"/>
+                                                    </constraints>
                                                 </activityIndicatorView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="Mkv-MC-hGp" firstAttribute="centerY" secondItem="Co6-lZ-5Y6" secondAttribute="centerY" id="PRT-5D-9gQ"/>
+                                                <constraint firstItem="Mkv-MC-hGp" firstAttribute="top" secondItem="Co6-lZ-5Y6" secondAttribute="top" constant="12" id="Rwb-Rm-ekJ"/>
                                                 <constraint firstItem="Mkv-MC-hGp" firstAttribute="centerX" secondItem="Co6-lZ-5Y6" secondAttribute="centerX" id="fI6-mi-Zkm"/>
+                                                <constraint firstAttribute="bottom" secondItem="Mkv-MC-hGp" secondAttribute="bottom" constant="12" id="xab-z7-kZK"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

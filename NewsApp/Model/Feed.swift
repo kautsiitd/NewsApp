@@ -24,11 +24,11 @@ protocol FeedProtocol {
 
 class Feed: BaseClass {
     //MARK: Properties
-    private let context = CoreDataStack.shared.persistentContainer.viewContext
+    let context = CoreDataStack.shared.persistentContainer.viewContext
     
     private var status: String = "Fail"
     private var totalResults: Int = 0
-    var articles: [ArticleData] = []
+    var articles: [Article] = []
     private var delegate: FeedProtocol
     var currentPage: Int = 0
     var hasReachedEnd: Bool = false
@@ -42,7 +42,7 @@ class Feed: BaseClass {
         switch type {
         case .saved:
             do {
-                articles = try context.fetch(ArticleData.fetchRequest())
+                articles = try context.fetch(Article.fetchRequest())
             } catch let error as NSError {
               print("Could not fetch. \(error), \(error.userInfo)")
             }
@@ -72,7 +72,7 @@ class Feed: BaseClass {
     }
     
     private func deleteOld() {
-        if let result = try? context.fetch(ArticleData.fetchRequest()) {
+        if let result = try? context.fetch(Article.fetchRequest()) {
             for object in result {
                 guard let object = object as? NSManagedObject else {
                     continue
@@ -80,11 +80,7 @@ class Feed: BaseClass {
                 context.delete(object)
             }
         }
-        do {
-            try context.save()
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
+        CoreDataStack.shared.save(context: context)
     }
     
     //MARK: ApiManagement
@@ -93,23 +89,19 @@ class Feed: BaseClass {
     }
     
     override func parse(response: [String : Any]) {
-        status = response["status"] as? String ?? "Fail"
-        totalResults = response["totalResults"] as? Int ?? 0
-        for responseElement in response["articles"] as? [[String: Any?]] ?? [] {
-            let article = Article(response: responseElement)
-            let articleData = ArticleData(entity: ArticleData.entity(),
-                                          insertInto: context)
-            articleData.title = article.title
-            articleData.author = article.author
-            articleData.content = article.content
-            articleData.date = article.publishedAt
-            articleData.newsDescription = article.description
-            articleData.url = article.url?.absoluteString ?? ""
-            articleData.urlToImage = article.urlToImage?.absoluteString ?? ""
-            CoreDataStack.shared.saveContext()
-            articles.append(articleData)
+        context.performAndWait {
+            status = response["status"] as? String ?? "Fail"
+            totalResults = response["totalResults"] as? Int ?? 0
+            for responseElement in response["articles"] as? [[String: Any?]] ?? [] {
+                let articleRemote = ArticleRemote(response: responseElement)
+                let article = Article(entity: Article.entity(),
+                                      insertInto: context)
+                article.setData(articleRemote: articleRemote)
+                articles.append(article)
+            }
+            CoreDataStack.shared.save(context: context)
+            hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
         }
-        hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
     }
     
     override func requestCompletedSuccessfully() {

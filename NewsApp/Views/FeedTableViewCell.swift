@@ -24,7 +24,7 @@ class FeedTableViewCell: UITableViewCell {
     
     //MARK: Properties
     var delegate: FeedTableViewCellProtocol?
-    private var article: ArticleData?
+    private var article: Article?
     
     override func prepareForReuse() {
         titleLabel.text = ""
@@ -38,26 +38,26 @@ class FeedTableViewCell: UITableViewCell {
 
 extension FeedTableViewCell {
     @IBAction func openNews() {
-        guard linkButton.isEnabled, let url = URL(string: article?.url ?? "") else {
+        guard linkButton.isEnabled, let url = article?.url else {
             return
         }
         delegate?.open(link: url)
     }
     
-    func setCell(article: ArticleData) {
+    func setCell(article: Article) {
         self.article = article
         titleLabel.text = article.title
         linkButton.isEnabled = (article.url != nil)
         authorLabel.text = article.author
-        let date = String((article.date ?? "T").split(separator: "T")[0])
+        let date = String(article.publishedAt.split(separator: "T")[0])
         dateLabel.text = date
         descriptionLabel.text = article.newsDescription
-        let imageURL = URL(string: article.urlToImage ?? "")
+        let imageURL = article.urlToImage
         newsImageView.getImageWith(imageURL,
                                    handleLoader: true,
                                    placeHolderImage: nil,
                                    completion: { [weak self] image, url, type in
-                                    if (url?.absoluteString == self?.article?.urlToImage) {
+                                    if (imageURL?.absoluteString == self?.article?.urlToImage?.absoluteString) {
                                         DispatchQueue.main.async {
                                             self?.newsImageView.stopLoader()
                                             self?.newsImageView.image = image
