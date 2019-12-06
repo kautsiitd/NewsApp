@@ -24,8 +24,7 @@ protocol FeedProtocol {
 
 class Feed: BaseClass {
     //MARK: Properties
-    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    private let context = CoreDataStack.shared.persistentContainer.viewContext
     
     private var status: String = "Fail"
     private var totalResults: Int = 0
@@ -107,7 +106,7 @@ class Feed: BaseClass {
             articleData.newsDescription = article.description
             articleData.url = article.url?.absoluteString ?? ""
             articleData.urlToImage = article.urlToImage?.absoluteString ?? ""
-            appDelegate.saveContext()
+            CoreDataStack.shared.saveContext()
             articles.append(articleData)
         }
         hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true

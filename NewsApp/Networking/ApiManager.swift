@@ -13,6 +13,7 @@ class ApiManager {
     
     //MARK: Properties
     static let shared = ApiManager()
+    private init() {}
     private let baseURL = "https://newsapi.org/v2/"
     private let apiKey = "540b9c1f92984559801a044ae60a4bb6"
     
