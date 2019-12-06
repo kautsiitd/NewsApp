@@ -46,17 +46,13 @@ class Feed: BaseClass {
             } catch let error as NSError {
               print("Could not fetch. \(error), \(error.userInfo)")
             }
-            if articles.isEmpty {
-                currentPage = 1
-                let params: [String: Any] = ["country": "us",
-                                             "page": currentPage]
-                ApiManager.shared.getRequestWith(params: params,
-                                                 delegate: self)
-            } else {
+            if !articles.isEmpty {
                 hasReachedEnd = true
                 delegate.requestCompletedSuccessfully()
+                return
+            } else {
+                currentPage = 1
             }
-            return
         case .next:
             currentPage += 1
         case .current:
