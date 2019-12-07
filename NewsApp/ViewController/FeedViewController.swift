@@ -18,10 +18,6 @@ class FeedViewController: UIViewController {
     private var feed: Feed!
     private var refreshControl: UIRefreshControl!
     
-    override var preferredStatusBarStyle : UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         feed = Feed(delegate: self)

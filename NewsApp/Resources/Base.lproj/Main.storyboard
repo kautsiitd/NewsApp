@@ -11,7 +11,7 @@
         <scene sceneID="cCa-h2-MQe">
             <objects>
                 <navigationController id="Ic0-MO-17Y" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bhk-Ev-018">
+                    <navigationBar key="navigationBar" opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bhk-Ev-018">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -144,7 +144,7 @@
                                 <rect key="frame" x="197" y="465" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="pk0-YH-M3n" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="56D-TS-grA"/>
                             <constraint firstItem="H56-7x-MzR" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Iyf-Uy-nB3"/>

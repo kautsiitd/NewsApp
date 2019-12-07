@@ -48,7 +48,7 @@ extension UIImageView {
         }
     }
     
-    private func assignImage(image: UIImage?) {
+    public func assignImage(image: UIImage?) {
         DispatchQueue.main.async { [weak self] in
             self?.stopLoader()
             self?.image = image
@@ -62,9 +62,6 @@ extension UIImageView {
         }) {
         guard let url = url else {
             completion(#imageLiteral(resourceName: "NoImage.png"), nil, .none)
-            DispatchQueue.main.async { [weak self] in
-                self?.stopLoader()
-            }
             return
         }
         if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
@@ -72,7 +69,7 @@ extension UIImageView {
         }
         else {
             if handleLoader {showLoader()}
-            downloadImageWith(url: url, completion: { [weak self] image in
+            downloadImageWith(url: url, completion: { image in
                 guard let image = image else {
                     completion(placeHolderImage, url, .downloaded)
                     return
@@ -80,9 +77,6 @@ extension UIImageView {
                 imageCache.setObject(image,
                                      forKey: url.absoluteString as NSString)
                 completion(image, url, .downloaded)
-                DispatchQueue.main.async {
-                    self?.stopLoader()
-                }
             })
         }
     }

@@ -58,14 +58,16 @@ extension FeedTableViewCell {
                                    placeHolderImage: nil,
                                    completion: { [weak self] image, url, type in
                                     if (imageURL?.absoluteString == self?.article?.urlToImage?.absoluteString) {
-                                        DispatchQueue.main.async {
-                                            self?.newsImageView.stopLoader()
-                                            self?.newsImageView.image = image
+                                        guard let image = image else {
+                                            self?.newsImageView.assignImage(image: #imageLiteral(resourceName: "NoImage.png"))
+                                            return
                                         }
-                                    }
-                                    else {
-                                        DispatchQueue.main.async {
-                                            self?.newsImageView.showLoader()
+                                        switch type {
+                                        case .downloaded:
+                                            self?.newsImageView.animate(image: image,
+                                                                        withAnimation: .transitionCrossDissolve)
+                                        default:
+                                            self?.newsImageView.assignImage(image: image)
                                         }
                                     }
         })
