@@ -88,8 +88,6 @@ extension UIImageView {
             self?.getDataFromUrl(url: url) { data, response, error in
                 guard let data = data,
                     let image = UIImage(data: data) else {
-                        print(url)
-                        print(error?.localizedDescription ?? "")
                         completion(#imageLiteral(resourceName: "NoImage.png"))
                         return
                 }
