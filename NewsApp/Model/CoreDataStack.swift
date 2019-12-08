@@ -26,10 +26,6 @@ class CoreDataStack {
         return container
     }()
     
-    func mainContext() -> NSManagedObjectContext {
-        return persistentContainer.viewContext
-    }
-    
     func save(context: NSManagedObjectContext) {
         if context.hasChanges {
             do {
