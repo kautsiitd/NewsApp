@@ -48,7 +48,7 @@ class ApiManager {
 }
 
 extension ApiManager {
-    func getURLWith(params: [String: Any]?, endPoint: String) -> String {
+    private func getURLWith(params: [String: Any]?, endPoint: String) -> String {
         guard let params = params else {
             return baseURL
         }
