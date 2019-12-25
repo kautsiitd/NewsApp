@@ -38,7 +38,7 @@ class FeedTableViewCell: UITableViewCell {
 
 extension FeedTableViewCell {
     @IBAction func openNews() {
-        guard linkButton.isEnabled, let url = article?.url else {
+        guard let url = article?.url else {
             return
         }
         delegate?.open(link: url)

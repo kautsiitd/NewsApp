@@ -17,44 +17,32 @@ class ApiManager {
     private let baseURL = "https://newsapi.org/v2/"
     private let apiKey = "540b9c1f92984559801a044ae60a4bb6"
     
-    func getRequestWith(params: [String: Any]?,
-                        delegate: BaseClassProtocol) {
-        guard let url = URL(string: getURLWith(params: params,
-                                               endPoint: delegate.getApiEndPoint())) else {
-                                                let error = NSError(domain: "InValid URL",
-                                                                    code: 0000,
-                                                                    userInfo: nil)
-                                                delegate.requestFailedWith(error: error)
-                                                return
+    func getRequestWith(params: [String: Any]?, delegate: BaseClassProtocol) {
+        guard let url = URL(string: getURLWith(params: params, endPoint: delegate.getApiEndPoint())) else {
+            delegate.requestFailedWith(error: .invalidURL)
+            return
         }
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
-                delegate.requestFailedWith(error: error as NSError?)
+                delegate.requestFailedWith(error: .custom(error: error as NSError?))
                 return
             }
             var json: Any
             do {
                 json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
             } catch {
-                let error = NSError(domain: "Invalid Data",
-                                    code: 0001,
-                                    userInfo: nil)
-                delegate.requestFailedWith(error: error)
+                delegate.requestFailedWith(error: .invalidData)
                 return
             }
             
             guard let responseDict = json as? [String: Any] else {
-                let error = NSError(domain: "Invalid Data",
-                                    code: 0001,
-                                    userInfo: nil)
-                delegate.requestFailedWith(error: error)
+                delegate.requestFailedWith(error: .invalidData)
                 return
             }
             
             delegate.parse(response: responseDict)
             delegate.requestCompletedSuccessfully()
         }
-        
         task.resume()
     }
 }

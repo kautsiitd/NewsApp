@@ -11,12 +11,13 @@ import UIKit
 import SafariServices
 
 class FeedViewController: UIViewController {
-    
     //MARK: Elements
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var loader: UIActivityIndicatorView!
-    private var feed: Feed!
     private var refreshControl: UIRefreshControl!
+    
+    //MARK: Properties
+    private var feed: Feed!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -28,7 +29,7 @@ class FeedViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 0, right: 0)
         
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView?.addSubview(refreshControl)
         
         loader.startAnimating()
@@ -56,7 +57,8 @@ extension FeedViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < feed.articles.count {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "FeedTableViewCell") as? FeedTableViewCell else {
+            let identifier = "\(FeedTableViewCell.self)"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? FeedTableViewCell else {
                 return UITableViewCell()
             }
             cell.delegate = self
@@ -64,7 +66,8 @@ extension FeedViewController: UITableViewDataSource {
             return cell
         }
         else if feed.articles.count > 0 && !feed.hasReachedEnd {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "LoaderTableViewCell") as? LoaderTableViewCell else {
+            let identifier = "\(LoaderTableViewCell.self)"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoaderTableViewCell else {
                 return UITableViewCell()
             }
             return cell
@@ -75,9 +78,13 @@ extension FeedViewController: UITableViewDataSource {
 
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == feed.articles.count && !feed.hasReachedEnd {
+        if isMoreToFetchAt(indexPath: indexPath) {
             feed.fetch(type: .next)
         }
+    }
+    
+    private func isMoreToFetchAt(indexPath: IndexPath) -> Bool {
+        return indexPath.row == feed.articles.count && !feed.hasReachedEnd
     }
 }
 
@@ -85,9 +92,7 @@ extension FeedViewController: UITableViewDelegate {
 extension FeedViewController: FeedTableViewCellProtocol {
     func open(link: URL) {
         let safariViewController = SFSafariViewController(url: link)
-        present(safariViewController,
-                animated: true,
-                completion: nil)
+        present(safariViewController, animated: true, completion: nil)
     }
 }
 
@@ -101,25 +106,28 @@ extension FeedViewController: FeedProtocol {
         }
     }
     
-    func requestFailedWith(error: NSError?) {
+    func requestFailedWith(error: CustomError) {
         DispatchQueue.main.async { [weak self] in
             self?.loader.stopAnimating()
             self?.refreshControl.endRefreshing()
-            let alertViewController = UIAlertController(title: error?.domain,
-                                                        message: error?.localizedDescription,
-                                                        preferredStyle: .alert)
-            let retryButton = UIAlertAction(title: "Retry",
-                                            style: .default,
-                                            handler: { _ in
-                                                if self?.feed.currentPage ?? 0 <= 1 {
-                                                    self?.loader.startAnimating()
-                                                }
-                                                self?.feed.fetch(type: .current)
-            })
-            alertViewController.addAction(retryButton)
-            self?.present(alertViewController,
-                          animated: true,
-                          completion: nil)
+            self?.showAlert(error: error)
         }
+    }
+    
+    private func showAlert(error: CustomError) {
+        let alertViewController = UIAlertController(title: error.title, message: error.description,
+                                                    preferredStyle: .alert)
+        let retryButton = UIAlertAction(title: "Retry", style: .default, handler: { [weak self] _ in
+            self?.retryFetching()
+        })
+        alertViewController.addAction(retryButton)
+        present(alertViewController, animated: true, completion: nil)
+    }
+    
+    private func retryFetching() {
+        if feed.currentPage <= 1 {
+            loader.startAnimating()
+        }
+        feed.fetch(type: .current)
     }
 }

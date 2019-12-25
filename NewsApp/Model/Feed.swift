@@ -19,7 +19,7 @@ enum FetchType {
 
 protocol FeedProtocol {
     func requestCompletedSuccessfully()
-    func requestFailedWith(error: NSError?)
+    func requestFailedWith(error: CustomError)
 }
 
 class Feed: BaseClass {
@@ -104,7 +104,7 @@ class Feed: BaseClass {
         delegate.requestCompletedSuccessfully()
     }
     
-    override func requestFailedWith(error: NSError?) {
+    override func requestFailedWith(error: CustomError) {
         delegate.requestFailedWith(error: error)
     }
 }

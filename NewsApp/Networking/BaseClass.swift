@@ -12,7 +12,7 @@ protocol BaseClassProtocol {
     func getApiEndPoint() -> String
     func parse(response: [String: Any])
     func requestCompletedSuccessfully()
-    func requestFailedWith(error: NSError?)
+    func requestFailedWith(error: CustomError)
 }
 
 class BaseClass: BaseClassProtocol {
@@ -21,5 +21,5 @@ class BaseClass: BaseClassProtocol {
     }
     func parse(response: [String : Any]) {}
     func requestCompletedSuccessfully() {}
-    func requestFailedWith(error: NSError?) {}
+    func requestFailedWith(error: CustomError) {}
 }
