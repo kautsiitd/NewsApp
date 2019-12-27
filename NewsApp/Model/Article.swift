@@ -20,27 +20,48 @@ class Source {
     }
 }
 
-class Article: NSManagedObject {
+class Article {
     //MARK: Properties
-    @NSManaged var author: String
-    @NSManaged var title: String
-    @NSManaged var newsDescription: String
-    @NSManaged var url: URL?
-    @NSManaged var urlToImage: URL?
-    @NSManaged var publishedAt: String
-    @NSManaged var content: String
+    var author: String
+    var title: String
+    var description: String
+    var newsLink: URL?
+    var imageLink: URL?
+    var publishedAt: Date?
+    var content: String
     
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Article> {
-        return NSFetchRequest<Article>(entityName: "Article")
+    //MARK: Variables
+    let formatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        return dateFormatter
+    }()
+    
+    init(response: [String: Any?]) {
+        author = response["author"] as? String ?? ""
+        title = response["title"] as? String ?? ""
+        description = response["description"] as? String ?? ""
+
+        var urlString = response["url"] as? String ?? ""
+        newsLink = URL(string: urlString)
+
+        urlString = response["urlToImage"] as? String ?? ""
+        imageLink = URL(string: urlString)
+        
+        var dateString = response["publishedAt"] as? String ?? ""
+        dateString = dateString.replacingOccurrences(of: "T", with: " ")
+        publishedAt = formatter.date(from: dateString)
+        
+        content = response["content"] as? String ?? ""
     }
     
-    func setData(articleRemote: ArticleRemote) {
-        author = articleRemote.author
-        title = articleRemote.title
-        newsDescription = articleRemote.description
-        url = articleRemote.url
-        urlToImage = articleRemote.urlToImage
-        publishedAt = articleRemote.publishedAt
-        content = articleRemote.content
+    init(articleCore: ArticleCore) {
+        author = articleCore.author
+        title = articleCore.title
+        description = articleCore.content
+        newsLink = articleCore.newsLink
+        imageLink = articleCore.imageLink
+        publishedAt = articleCore.date
+        content = ""
     }
 }

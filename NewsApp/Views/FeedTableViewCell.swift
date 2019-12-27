@@ -38,26 +38,23 @@ class FeedTableViewCell: UITableViewCell {
 
 extension FeedTableViewCell {
     @IBAction func openNews() {
-        guard let url = article?.url else {
+        guard let newsLink = article?.newsLink else {
             return
         }
-        delegate?.open(link: url)
+        delegate?.open(link: newsLink)
     }
     
     func setCell(article: Article) {
         self.article = article
         titleLabel.text = article.title
-        linkButton.isEnabled = (article.url != nil)
+        linkButton.isEnabled = (article.newsLink != nil)
         authorLabel.text = article.author
-        let date = String(article.publishedAt.split(separator: "T")[0])
-        dateLabel.text = date
-        descriptionLabel.text = article.newsDescription
-        let imageURL = article.urlToImage
-        newsImageView.getImageWith(imageURL,
-                                   handleLoader: true,
-                                   placeHolderImage: nil,
+        dateLabel.text = article.publishedAt?.convertTo(string: "yyyy-MM-dd")
+        descriptionLabel.text = article.description
+        let imageLink = article.imageLink
+        newsImageView.getImageWith(article.imageLink, handleLoader: true, placeHolderImage: nil,
                                    completion: { [weak self] image, url, type in
-                                    if (imageURL?.absoluteString == self?.article?.urlToImage?.absoluteString) {
+                                    if url == imageLink {
                                         guard let image = image else {
                                             self?.newsImageView.assignImage(image: #imageLiteral(resourceName: "NoImage.png"))
                                             return

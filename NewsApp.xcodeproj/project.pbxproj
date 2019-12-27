@@ -10,8 +10,9 @@
 		630C16452395374000349D5A /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630C16442395374000349D5A /* FeedTableViewCell.swift */; };
 		630C164723953B9F00349D5A /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630C164623953B9F00349D5A /* Article.swift */; };
 		630C164923953BE600349D5A /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630C164823953BE600349D5A /* Feed.swift */; };
-		631269D9239B16E500832B90 /* ArticleRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631269D8239B16E500832B90 /* ArticleRemote.swift */; };
 		6335F5E023B42B2200ED09A0 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335F5DF23B42B2200ED09A0 /* CustomError.swift */; };
+		6335F5E223B53D2300ED09A0 /* ArticleCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335F5E123B53D2300ED09A0 /* ArticleCore.swift */; };
+		6335F5E623B5844300ED09A0 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335F5E523B5844300ED09A0 /* Date.swift */; };
 		63486FAE239A01A100D9200A /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63486FAD239A01A100D9200A /* CoreDataStack.swift */; };
 		636DE07523925C1C00305557 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636DE07423925C1C00305557 /* AppDelegate.swift */; };
 		636DE07723925C1C00305557 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636DE07623925C1C00305557 /* SceneDelegate.swift */; };
@@ -30,8 +31,9 @@
 		630C16442395374000349D5A /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		630C164623953B9F00349D5A /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		630C164823953BE600349D5A /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
-		631269D8239B16E500832B90 /* ArticleRemote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleRemote.swift; sourceTree = "<group>"; };
 		6335F5DF23B42B2200ED09A0 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
+		6335F5E123B53D2300ED09A0 /* ArticleCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCore.swift; sourceTree = "<group>"; };
+		6335F5E523B5844300ED09A0 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		63486FAD239A01A100D9200A /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		636DE07123925C1C00305557 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		636DE07423925C1C00305557 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,7 +100,7 @@
 				63486FAD239A01A100D9200A /* CoreDataStack.swift */,
 				630C164623953B9F00349D5A /* Article.swift */,
 				630C164823953BE600349D5A /* Feed.swift */,
-				631269D8239B16E500832B90 /* ArticleRemote.swift */,
+				6335F5E123B53D2300ED09A0 /* ArticleCore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -125,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				63B998AF2393138C004BAE66 /* UIImageView.swift */,
+				6335F5E523B5844300ED09A0 /* Date.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -220,16 +223,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E7DAAB2395F36F002ACA93 /* LoaderTableViewCell.swift in Sources */,
+				6335F5E623B5844300ED09A0 /* Date.swift in Sources */,
 				63E7E7B2239674E300715D97 /* NewsApp.xcdatamodeld in Sources */,
 				63B998AB2392FE63004BAE66 /* ApiManager.swift in Sources */,
 				630C164923953BE600349D5A /* Feed.swift in Sources */,
 				63B998AD2392FEBD004BAE66 /* BaseClass.swift in Sources */,
+				6335F5E223B53D2300ED09A0 /* ArticleCore.swift in Sources */,
 				630C16452395374000349D5A /* FeedTableViewCell.swift in Sources */,
 				63486FAE239A01A100D9200A /* CoreDataStack.swift in Sources */,
 				6335F5E023B42B2200ED09A0 /* CustomError.swift in Sources */,
 				636DE07923925C1C00305557 /* FeedViewController.swift in Sources */,
 				630C164723953B9F00349D5A /* Article.swift in Sources */,
-				631269D9239B16E500832B90 /* ArticleRemote.swift in Sources */,
 				636DE07523925C1C00305557 /* AppDelegate.swift in Sources */,
 				63B998B02393138C004BAE66 /* UIImageView.swift in Sources */,
 				636DE07723925C1C00305557 /* SceneDelegate.swift in Sources */,

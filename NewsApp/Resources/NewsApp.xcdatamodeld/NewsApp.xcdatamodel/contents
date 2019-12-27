@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Article" representedClassName=".Article" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ArticleCore" representedClassName=".ArticleCore" syncable="YES">
         <attribute name="author" attributeType="String"/>
         <attribute name="content" attributeType="String"/>
-        <attribute name="newsDescription" attributeType="String"/>
-        <attribute name="publishedAt" attributeType="String" defaultValueString="TA"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="imageLink" optional="YES" attributeType="URI"/>
+        <attribute name="newsLink" optional="YES" attributeType="URI"/>
         <attribute name="title" attributeType="String"/>
-        <attribute name="url" optional="YES" attributeType="URI"/>
-        <attribute name="urlToImage" optional="YES" attributeType="URI"/>
     </entity>
     <elements>
-        <element name="Article" positionX="-54" positionY="45" width="128" height="148"/>
+        <element name="ArticleCore" positionX="-63" positionY="-18" width="128" height="148"/>
     </elements>
 </model>

@@ -18,6 +18,7 @@ class FeedViewController: UIViewController {
     
     //MARK: Properties
     private var feed: Feed!
+    private var currentPage: Int = 1
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -33,15 +34,15 @@ class FeedViewController: UIViewController {
         tableView?.addSubview(refreshControl)
         
         loader.startAnimating()
-        feed.fetch(type: .saved)
+        feed.fetch(pageNumber: currentPage, ifPossibleCoreData: true)
     }
 }
 
 //MARK: IBOutlets
 extension FeedViewController {
     @IBAction private func refresh() {
-        feed.articles = []
-        feed.fetch(type: .refresh)
+        currentPage = 1
+        feed.fetch(pageNumber: currentPage)
         DispatchQueue.main.async { [weak self] in
             self?.loader.startAnimating()
             self?.tableView.reloadData()
@@ -58,18 +59,14 @@ extension FeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < feed.articles.count {
             let identifier = "\(FeedTableViewCell.self)"
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? FeedTableViewCell else {
-                return UITableViewCell()
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! FeedTableViewCell
             cell.delegate = self
             cell.setCell(article: feed.articles[indexPath.row])
             return cell
         }
         else if feed.articles.count > 0 && !feed.hasReachedEnd {
             let identifier = "\(LoaderTableViewCell.self)"
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? LoaderTableViewCell else {
-                return UITableViewCell()
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! LoaderTableViewCell
             return cell
         }
         return UITableViewCell()
@@ -79,7 +76,8 @@ extension FeedViewController: UITableViewDataSource {
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if isMoreToFetchAt(indexPath: indexPath) {
-            feed.fetch(type: .next)
+            currentPage += 1
+            feed.fetch(pageNumber: currentPage)
         }
     }
     
@@ -125,9 +123,9 @@ extension FeedViewController: FeedProtocol {
     }
     
     private func retryFetching() {
-        if feed.currentPage <= 1 {
+        if currentPage == 1 {
             loader.startAnimating()
         }
-        feed.fetch(type: .current)
+        feed.fetch(pageNumber: currentPage)
     }
 }

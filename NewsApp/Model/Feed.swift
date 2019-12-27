@@ -30,53 +30,10 @@ class Feed: BaseClass {
     private var totalResults: Int = 0
     var articles: [Article] = []
     private var delegate: FeedProtocol
-    var currentPage: Int = 0
     var hasReachedEnd: Bool = false
     
     init(delegate: FeedProtocol) {
         self.delegate = delegate
-    }
-    
-    //MARK: Available Functions
-    func fetch(type: FetchType) {
-        switch type {
-        case .saved:
-            do {
-                articles = try context.fetch(Article.fetchRequest())
-            } catch let error as NSError {
-              print("Could not fetch. \(error), \(error.userInfo)")
-            }
-            if !articles.isEmpty {
-                hasReachedEnd = true
-                delegate.requestCompletedSuccessfully()
-                return
-            } else {
-                currentPage = 1
-            }
-        case .next:
-            currentPage += 1
-        case .current:
-            break
-        case .refresh:
-            deleteOld()
-            currentPage = 1
-        }
-        let params: [String: Any] = ["country": "us",
-                                     "page": currentPage]
-        ApiManager.shared.getRequestWith(params: params,
-                                         delegate: self)
-    }
-    
-    private func deleteOld() {
-        if let result = try? context.fetch(Article.fetchRequest()) {
-            for object in result {
-                guard let object = object as? NSManagedObject else {
-                    continue
-                }
-                context.delete(object)
-            }
-        }
-        CoreDataStack.shared.save(context: context)
     }
     
     //MARK: ApiManagement
@@ -85,19 +42,29 @@ class Feed: BaseClass {
     }
     
     override func parse(response: [String : Any]) {
-        context.performAndWait {
-            status = response["status"] as? String ?? "Fail"
-            totalResults = response["totalResults"] as? Int ?? 0
-            for responseElement in response["articles"] as? [[String: Any?]] ?? [] {
-                let articleRemote = ArticleRemote(response: responseElement)
-                let article = Article(entity: Article.entity(),
-                                      insertInto: context)
-                article.setData(articleRemote: articleRemote)
-                articles.append(article)
-            }
-            CoreDataStack.shared.save(context: context)
-            hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
+        status = response["status"] as? String ?? "Fail"
+        totalResults = response["totalResults"] as? Int ?? 0
+        for articleDict in response["articles"] as? [[String: Any?]] ?? [] {
+            let article = Article(response: articleDict)
+            articles.append(article)
         }
+        hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
+        updateCoreData()
+    }
+    
+    private func updateCoreData() {
+        DispatchQueue.main.async { [unowned self] in
+            for article in self.articles {
+                let articleCore = ArticleCore(context: self.context)
+                articleCore.setData(article: article)
+            }
+            if !self.articles.isEmpty { self.deleteOld() }
+            CoreDataStack.shared.save(context: self.context)
+        }
+    }
+    
+    private func deleteOld() {
+        CoreDataStack.shared.delete(entityName: "\(ArticleCore.self)")
     }
     
     override func requestCompletedSuccessfully() {
@@ -106,5 +73,35 @@ class Feed: BaseClass {
     
     override func requestFailedWith(error: CustomError) {
         delegate.requestFailedWith(error: error)
+    }
+}
+
+extension Feed {
+    func fetch(pageNumber: Int, ifPossibleCoreData: Bool = false) {
+        if pageNumber == 1 || ifPossibleCoreData {
+            articles = []
+        }
+        if ifPossibleCoreData {
+            fetchCoreData()
+            if !articles.isEmpty {
+                hasReachedEnd = true
+                delegate.requestCompletedSuccessfully()
+                return
+            }
+        }
+        let params: [String: Any] = ["country": "us", "page": pageNumber]
+        ApiManager.shared.getRequestWith(params: params, delegate: self)
+    }
+    
+    private func fetchCoreData() {
+        do {
+            let coreArticles = try context.fetch(ArticleCore.fetchAll())
+            for articleCore in coreArticles {
+                let article = Article(articleCore: articleCore)
+                articles.append(article)
+            }
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
     }
 }
