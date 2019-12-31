@@ -10,13 +10,6 @@ import Foundation
 import UIKit
 import CoreData
 
-enum FetchType {
-    case saved
-    case current
-    case next
-    case refresh
-}
-
 protocol FeedProtocol {
     func requestCompletedSuccessfully()
     func requestFailedWith(error: CustomError)
@@ -24,10 +17,15 @@ protocol FeedProtocol {
 
 class Feed: BaseClass {
     //MARK: Properties
-    let context = CoreDataStack.shared.persistentContainer.viewContext
+    private let context: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.parent = CoreDataStack.shared.persistentContainer.viewContext
+        return context
+    }()
     
     private var status: String = "Fail"
     private var totalResults: Int = 0
+    private var fetchPage: Int = 0
     var articles: [Article] = []
     private var delegate: FeedProtocol
     var hasReachedEnd: Bool = false
@@ -44,30 +42,32 @@ class Feed: BaseClass {
     override func parse(response: [String : Any]) {
         status = response["status"] as? String ?? "Fail"
         totalResults = response["totalResults"] as? Int ?? 0
-        for articleDict in response["articles"] as? [[String: Any?]] ?? [] {
-            let article = Article(response: articleDict)
+        
+        var remoteArticles: [ArticleRemote] = []
+        for articleRemoteDict in response["articles"] as? [[String: Any?]] ?? [] {
+            let articleRemote = ArticleRemote(response: articleRemoteDict)
+            remoteArticles.append(articleRemote)
+        }
+        for articleRemote in remoteArticles {
+            let article = Article(context: context)
+            article.setData(articleRemote: articleRemote)
             articles.append(article)
         }
+        try? context.save()
+        
         hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
-        updateCoreData()
-    }
-    
-    private func updateCoreData() {
-        DispatchQueue.main.async { [unowned self] in
-            for article in self.articles {
-                let articleCore = ArticleCore(context: self.context)
-                articleCore.setData(article: article)
-            }
-            if !self.articles.isEmpty { self.deleteOld() }
-            CoreDataStack.shared.save(context: self.context)
-        }
     }
     
     private func deleteOld() {
-        CoreDataStack.shared.delete(entityName: "\(ArticleCore.self)")
+        let imageDeleteRequest = Image.deleteAll()
+        _ = try? context.execute(imageDeleteRequest)
+        let articlesDeleteRequest = Article.deleteAll()
+        _ = try? context.execute(articlesDeleteRequest)
     }
     
     override func requestCompletedSuccessfully() {
+        //Delete old coreData only when there is new feed fetch data is available
+        if fetchPage == 1 { deleteOld() }
         delegate.requestCompletedSuccessfully()
     }
     
@@ -78,15 +78,16 @@ class Feed: BaseClass {
 
 extension Feed {
     func fetch(pageNumber: Int, ifPossibleCoreData: Bool = false) {
-        if pageNumber == 1 || ifPossibleCoreData {
+        fetchPage = pageNumber
+        if pageNumber == 1 {
             articles = []
-        }
-        if ifPossibleCoreData {
-            fetchCoreData()
-            if !articles.isEmpty {
-                hasReachedEnd = true
-                delegate.requestCompletedSuccessfully()
-                return
+            if ifPossibleCoreData {
+                fetchCoreData()
+                if !articles.isEmpty {
+                    hasReachedEnd = true
+                    delegate.requestCompletedSuccessfully()
+                    return
+                }
             }
         }
         let params: [String: Any] = ["country": "us", "page": pageNumber]
@@ -95,11 +96,7 @@ extension Feed {
     
     private func fetchCoreData() {
         do {
-            let coreArticles = try context.fetch(ArticleCore.fetchAll())
-            for articleCore in coreArticles {
-                let article = Article(articleCore: articleCore)
-                articles.append(article)
-            }
+            articles = try context.fetch(Article.fetchAll())
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }

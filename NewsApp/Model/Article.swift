@@ -2,66 +2,42 @@
 //  Article.swift
 //  NewsApp
 //
-//  Created by Kautsya Kanu on 02/12/19.
+//  Created by Kautsya Kanu on 27/12/19.
 //  Copyright © 2019 Kautsya Kanu. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
-class Source {
+class Article: NSManagedObject {
     //MARK: Properties
-    private var id: Int
-    var name: String
+    @NSManaged var title: String
+    @NSManaged var newsLink: URL?
+    @NSManaged var imageLink: URL?
+    @NSManaged var image: NSData?
+    @NSManaged var author: String
+    @NSManaged var date: Date?
+    @NSManaged var content: String
     
-    init(response: [String: Any?]) {
-        id = response["id"] as? Int ?? 0
-        name = response["name"] as? String ?? ""
-    }
-}
-
-class Article {
-    //MARK: Properties
-    var author: String
-    var title: String
-    var description: String
-    var newsLink: URL?
-    var imageLink: URL?
-    var publishedAt: Date?
-    var content: String
-    
-    //MARK: Variables
-    let formatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
-        return dateFormatter
-    }()
-    
-    init(response: [String: Any?]) {
-        author = response["author"] as? String ?? ""
-        title = response["title"] as? String ?? ""
-        description = response["description"] as? String ?? ""
-
-        var urlString = response["url"] as? String ?? ""
-        newsLink = URL(string: urlString)
-
-        urlString = response["urlToImage"] as? String ?? ""
-        imageLink = URL(string: urlString)
-        
-        var dateString = response["publishedAt"] as? String ?? ""
-        dateString = dateString.replacingOccurrences(of: "T", with: " ")
-        publishedAt = formatter.date(from: dateString)
-        
-        content = response["content"] as? String ?? ""
+    @nonobjc class func fetchAll() -> NSFetchRequest<Article> {
+        let request = NSFetchRequest<Article>(entityName: "\(Article.self)")
+        let dateTimeSort = NSSortDescriptor(key: #keyPath(Article.date), ascending: false)
+        request.sortDescriptors = [dateTimeSort]
+        return request
     }
     
-    init(articleCore: ArticleCore) {
-        author = articleCore.author
-        title = articleCore.title
-        description = articleCore.content
-        newsLink = articleCore.newsLink
-        imageLink = articleCore.imageLink
-        publishedAt = articleCore.date
-        content = ""
+    @nonobjc class func deleteAll() -> NSBatchDeleteRequest {
+        let fetchRequest = NSFetchRequest<Article>(entityName: "\(Article.self)")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
+        return deleteRequest
+    }
+    
+    func setData(articleRemote: ArticleRemote) {
+        title = articleRemote.title
+        newsLink = articleRemote.newsLink
+        imageLink = articleRemote.imageLink
+        author = articleRemote.author
+        date = articleRemote.publishedAt
+        content = articleRemote.description
     }
 }

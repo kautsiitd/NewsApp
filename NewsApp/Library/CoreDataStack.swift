@@ -26,25 +26,14 @@ class CoreDataStack {
         return container
     }()
     
-    func save(context: NSManagedObjectContext) {
+    func save() {
+        let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
                 try context.save()
             } catch let error as NSError {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-        }
-    }
-    
-    func delete(entityName: String) {
-        let fetchRequest = NSFetchRequest<ArticleCore>(entityName: entityName) as! NSFetchRequest<NSFetchRequestResult>
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        let coordinator = persistentContainer.persistentStoreCoordinator
-        let context = persistentContainer.viewContext
-        do {
-            try coordinator.execute(deleteRequest, with: context)
-        } catch let error as NSError {
-            fatalError("Unresolved error \(error), \(error.userInfo)")
         }
     }
 }

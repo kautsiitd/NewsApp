@@ -54,7 +54,7 @@
                                                         <action selector="openNews" destination="cEw-3e-qfU" eventType="touchDown" id="XHL-Ag-XmV"/>
                                                     </connections>
                                                 </button>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gBJ-fv-J0r">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gBJ-fv-J0r" customClass="CustomImageView" customModule="NewsApp" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="45.5" width="414" height="233"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>

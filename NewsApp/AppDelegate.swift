@@ -16,5 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         imageCache.countLimit = 40
         return true
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        CoreDataStack.shared.save()
+    }
 }
 
