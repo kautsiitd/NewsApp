@@ -73,6 +73,7 @@ extension FeedViewController: UITableViewDataSource {
     }
 }
 
+//MARK: UITableViewDelegate
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if isMoreToFetchAt(indexPath: indexPath) {
