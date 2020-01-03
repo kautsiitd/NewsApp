@@ -14,7 +14,6 @@ class Article: NSManagedObject {
     @NSManaged var title: String
     @NSManaged var newsLink: URL?
     @NSManaged var imageLink: URL?
-    @NSManaged var image: NSData?
     @NSManaged var author: String
     @NSManaged var date: Date?
     @NSManaged var content: String

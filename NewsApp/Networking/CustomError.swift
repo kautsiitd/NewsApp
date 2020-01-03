@@ -11,6 +11,7 @@ import Foundation
 enum CustomError {
     case invalidURL
     case invalidData
+    case retryRemote
     case custom(error: NSError?)
 
     var title: String {
@@ -19,6 +20,8 @@ enum CustomError {
             return "InvalidURL"
         case .invalidData:
             return "InvalidData"
+        case .retryRemote:
+            return "Retry"
         case let .custom(error):
             return error?.domain ?? "Oops!!"
         }
@@ -30,6 +33,8 @@ enum CustomError {
             return "Can't Open"
         case .invalidData:
             return "Can't Open"
+        case .retryRemote:
+            return "Try Again!!"
         case let .custom(error):
             return error?.localizedDescription ?? "Something went wrong 😭"
         }

@@ -4,7 +4,6 @@
         <attribute name="author" attributeType="String"/>
         <attribute name="content" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="imageLink" optional="YES" attributeType="URI"/>
         <attribute name="newsLink" optional="YES" attributeType="URI"/>
         <attribute name="title" attributeType="String"/>
@@ -14,7 +13,7 @@
         <attribute name="urlString" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Article" positionX="-63" positionY="-18" width="128" height="148"/>
+        <element name="Article" positionX="-63" positionY="-18" width="128" height="133"/>
         <element name="Image" positionX="-63" positionY="36" width="128" height="73"/>
     </elements>
 </model>

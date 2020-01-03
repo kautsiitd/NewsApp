@@ -46,7 +46,7 @@ extension CustomImageView {
             return
         }
         
-        guard let url = URL(string: urlString) else {
+        guard let url = URL(string: urlString)?.safeURL() else {
             self.setImage(image: #imageLiteral(resourceName: "NoImage.png"), for: urlString)
             return
         }
