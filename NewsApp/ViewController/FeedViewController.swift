@@ -36,7 +36,9 @@ class FeedViewController: UIViewController {
         tableView?.addSubview(refreshControl)
         
         loader.startAnimating()
-        feed.fetchCoreData()
+        DispatchQueue.main.async {
+            self.feed.fetchCoreData()
+        }
     }
 }
 
@@ -45,10 +47,11 @@ extension FeedViewController {
     @IBAction private func refresh() {
         currentPage = 1
         currentCount = 0
-        feed.fetch(pageNumber: currentPage)
         DispatchQueue.main.async { [weak self] in
-            self?.tableView.reloadData()
-            self?.loader.startAnimating()
+            guard let self = self else { return }
+            self.feed.fetch(pageNumber: self.currentPage)
+            self.tableView.reloadData()
+            self.loader.startAnimating()
         }
     }
 }
@@ -108,7 +111,7 @@ extension FeedViewController: FeedProtocol {
         case .remote(let fetchedPage):
             currentPage = fetchedPage
         default:
-            return
+            break
         }
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
