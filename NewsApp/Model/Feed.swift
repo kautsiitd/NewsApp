@@ -11,11 +11,15 @@ import UIKit
 import CoreData
 
 protocol FeedProtocol {
-    func requestCompletedSuccessfully()
+    func requestCompletedSuccessfully(of source: Feed.Source)
     func requestFailedWith(error: CustomError)
 }
 
 class Feed: BaseClass {
+    enum Source {
+        case coreData
+        case remote(pageNumber: Int)
+    }
     //MARK: Properties
     private let context: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
@@ -23,12 +27,14 @@ class Feed: BaseClass {
         return context
     }()
     
-    private var status: String = "Fail"
     private var totalResults: Int = 0
-    private var fetchPage: Int = 0
+    private var fetchedPage: Int = 0
     var articles: [Article] = []
     private var delegate: FeedProtocol
     var hasReachedEnd: Bool = false
+    
+    var lastCount: Int = 0
+    var newCount: Int = 0
     
     init(delegate: FeedProtocol) {
         self.delegate = delegate
@@ -40,7 +46,7 @@ class Feed: BaseClass {
     }
     
     override func parse(response: [String : Any]) {
-        status = response["status"] as? String ?? "Fail"
+        _ = response["status"] as? String ?? "Fail"
         totalResults = response["totalResults"] as? Int ?? 0
         
         var remoteArticles: [ArticleRemote] = []
@@ -55,7 +61,7 @@ class Feed: BaseClass {
         }
         try? context.save()
         
-        hasReachedEnd = (response["articles"] as? [Any])?.isEmpty ?? true
+        hasReachedEnd = totalResults == articles.count
     }
     
     private func deleteOld() {
@@ -67,8 +73,8 @@ class Feed: BaseClass {
     
     override func requestCompletedSuccessfully() {
         //Delete old coreData only when there is new feed fetch data is available
-        if fetchPage == 1 { deleteOld() }
-        delegate.requestCompletedSuccessfully()
+        if fetchedPage == 1 { deleteOld() }
+        delegate.requestCompletedSuccessfully(of: .remote(pageNumber: fetchedPage))
     }
     
     override func requestFailedWith(error: CustomError) {
@@ -77,28 +83,47 @@ class Feed: BaseClass {
 }
 
 extension Feed {
-    func fetch(pageNumber: Int, ifPossibleCoreData: Bool = false) {
-        fetchPage = pageNumber
-        if pageNumber == 1 {
-            articles = []
-            if ifPossibleCoreData {
-                fetchCoreData()
-                if !articles.isEmpty {
-                    hasReachedEnd = true
-                    delegate.requestCompletedSuccessfully()
-                    return
-                }
-            }
-        }
-        let params: [String: Any] = ["country": "us", "page": pageNumber]
-        ApiManager.shared.getRequestWith(params: params, delegate: self)
-    }
-    
-    private func fetchCoreData() {
+    func fetchCoreData() {
+        articles = []
         do {
             articles = try context.fetch(Article.fetchAll())
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
+        if articles.isEmpty {
+            delegate.requestFailedWith(error: .retryRemote)
+        } else {
+            hasReachedEnd = true
+            delegate.requestCompletedSuccessfully(of: .coreData)
+        }
+    }
+    
+    func fetch(nextOf pageNumber: Int) {
+        if fetchedPage == pageNumber + 1 { return } //Requesting to fetch same page again
+        fetch(pageNumber: pageNumber + 1)
+    }
+    
+    func fetch(pageNumber: Int) {
+        if pageNumber == 1 { articles = [] }
+        fetchedPage = pageNumber
+        let params: [String: Any] = ["country": "us", "page": pageNumber]
+        ApiManager.shared.getRequestWith(params: params, delegate: self)
+    }
+}
+
+extension Feed.Source {
+    static func ==(lhs: Feed.Source, rhs: Feed.Source) -> Bool {
+        switch (lhs,rhs) {
+        case (.coreData, .coreData):
+            return true
+        case (.remote(_), .remote(_)):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    static func !=(lhs: Feed.Source, rhs: Feed.Source) -> Bool {
+        return !(lhs == rhs)
     }
 }
