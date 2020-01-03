@@ -14,6 +14,7 @@ class FeedViewController: UIViewController {
     //MARK: Elements
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var loader: UIActivityIndicatorView!
+    @IBOutlet private weak var refreshButton: UIBarButtonItem!
     private var refreshControl: UIRefreshControl!
     
     //MARK: Properties
@@ -47,6 +48,7 @@ extension FeedViewController {
     @IBAction private func refresh() {
         currentPage = 1
         currentCount = 0
+        refreshButton.isEnabled = false
         feed.fetch(pageNumber: currentPage)
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
@@ -117,6 +119,7 @@ extension FeedViewController: FeedProtocol {
             self.loader.stopAnimating()
             self.refreshControl.endRefreshing()
             self.tableView.insertRows(at: self.newIndexPaths(), with: .automatic)
+            self.refreshButton.isEnabled = true
             self.currentCount = self.feed.articles.count
         }
     }

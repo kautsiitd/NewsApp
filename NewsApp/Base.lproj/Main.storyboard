@@ -164,6 +164,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="loader" destination="pk0-YH-M3n" id="jyd-I5-ohX"/>
+                        <outlet property="refreshButton" destination="8n3-Vn-rb5" id="AZo-5e-BaC"/>
                         <outlet property="tableView" destination="H56-7x-MzR" id="54c-Gy-0b2"/>
                     </connections>
                 </viewController>
