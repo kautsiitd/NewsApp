@@ -47,11 +47,10 @@ extension FeedViewController {
     @IBAction private func refresh() {
         currentPage = 1
         currentCount = 0
+        feed.fetch(pageNumber: currentPage)
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.feed.fetch(pageNumber: self.currentPage)
-            self.tableView.reloadData()
-            self.loader.startAnimating()
+            self?.tableView.reloadData()
+            self?.loader.startAnimating()
         }
     }
 }
