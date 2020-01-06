@@ -30,16 +30,18 @@ class FeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
-        
-        refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        tableView?.addSubview(refreshControl)
-        
+        setupTableView()
         loader.startAnimating()
         DispatchQueue.main.async {
             self.feed.fetchCoreData()
         }
+    }
+    
+    private func setupTableView() {
+        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        tableView?.addSubview(refreshControl)
     }
 }
 
@@ -106,7 +108,7 @@ extension FeedViewController: FeedTableViewCellProtocol {
 
 //MARK: API Management
 extension FeedViewController: FeedProtocol {
-    func requestCompletedSuccessfully(of source: Feed.Source) {
+    func didFetchSuccessful(of source: Feed.Source) {
         feedSource = source
         switch source {
         case .remote(let fetchedPage):
@@ -138,27 +140,21 @@ extension FeedViewController: FeedProtocol {
         return indexPaths
     }
     
-    func requestFailedWith(error: CustomError) {
+    func didFail(with error: CustomError) {
         switch error {
         case .retryRemote:
             feed.fetch(pageNumber: currentPage)
         default:
             DispatchQueue.main.async { [weak self] in
-                self?.loader.stopAnimating()
-                self?.refreshControl.endRefreshing()
-                self?.showAlert(error: error)
+                guard let self = self else { return }
+                self.loader.stopAnimating()
+                self.refreshControl.endRefreshing()
+                
+                let retry = CustomAlertAction.retry(self.retryFetching())
+                let alert = CustomAlert(with: error, actions: [retry])
+                self.present(alert, animated: true, completion: nil)
             }
         }
-    }
-    
-    private func showAlert(error: CustomError) {
-        let alertViewController = UIAlertController(title: error.title, message: error.description,
-                                                    preferredStyle: .alert)
-        let retryButton = UIAlertAction(title: "Retry", style: .default, handler: { [weak self] _ in
-            self?.retryFetching()
-        })
-        alertViewController.addAction(retryButton)
-        present(alertViewController, animated: true, completion: nil)
     }
     
     private func retryFetching() {

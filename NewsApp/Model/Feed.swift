@@ -11,8 +11,8 @@ import UIKit
 import CoreData
 
 protocol FeedProtocol {
-    func requestCompletedSuccessfully(of source: Feed.Source)
-    func requestFailedWith(error: CustomError)
+    func didFetchSuccessful(of source: Feed.Source)
+    func didFail(with error: CustomError)
 }
 
 class Feed: BaseClass {
@@ -26,32 +26,36 @@ class Feed: BaseClass {
         context.parent = CoreDataStack.shared.persistentContainer.viewContext
         return context
     }()
-    
+    private var delegate: FeedProtocol
     private var totalResults: Int = 0
     private var fetchedPage: Int = 0
-    var articles: [Article] = []
-    private var delegate: FeedProtocol
-    var hasReachedEnd: Bool = false
     
-    var lastCount: Int = 0
-    var newCount: Int = 0
+    var articles: [Article] = []
+    var hasReachedEnd: Bool = false
     
     init(delegate: FeedProtocol) {
         self.delegate = delegate
     }
     
     //MARK: ApiManagement
-    override func getApiEndPoint() -> String {
-        return "top-headlines"
+    override func apiEndPoint() -> String {
+        return "v2/top-headlines"
     }
     
-    override func parse(response: [String : Any]) {
+    override func parse(_ response: [String : Any]) {
         _ = response["status"] as? String ?? "Fail"
         totalResults = response["totalResults"] as? Int ?? 0
         
+        let remoteArticlesDict = response["articles"] as? [[String: Any?]] ?? []
+        parse(remoteArticlesDict)
+        
+        hasReachedEnd = totalResults == articles.count
+    }
+    
+    private func parse(_ remoteArticlesDict: [[String: Any?]]) {
         var remoteArticles: [ArticleRemote] = []
-        for articleRemoteDict in response["articles"] as? [[String: Any?]] ?? [] {
-            let articleRemote = ArticleRemote(response: articleRemoteDict)
+        for remoteArticleDict in remoteArticlesDict {
+            let articleRemote = ArticleRemote(response: remoteArticleDict)
             remoteArticles.append(articleRemote)
         }
         for articleRemote in remoteArticles {
@@ -60,8 +64,6 @@ class Feed: BaseClass {
             articles.append(article)
         }
         try? context.save()
-        
-        hasReachedEnd = totalResults == articles.count
     }
     
     private func deleteOld() {
@@ -71,30 +73,26 @@ class Feed: BaseClass {
         _ = try? context.execute(articlesDeleteRequest)
     }
     
-    override func requestCompletedSuccessfully() {
+    override func didFetchSuccessfully() {
         //Delete old coreData only when there is new feed fetch data is available
         if fetchedPage == 1 { deleteOld() }
-        delegate.requestCompletedSuccessfully(of: .remote(pageNumber: fetchedPage))
+        delegate.didFetchSuccessful(of: .remote(pageNumber: fetchedPage))
     }
     
-    override func requestFailedWith(error: CustomError) {
-        delegate.requestFailedWith(error: error)
+    override func didFail(with error: CustomError) {
+        delegate.didFail(with: error)
     }
 }
 
+//MARK: Available functions
 extension Feed {
     func fetchCoreData() {
-        articles = []
-        do {
-            articles = try context.fetch(Article.fetchAll())
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
+        articles = (try? context.fetch(Article.fetchAll())) ?? []
         if articles.isEmpty {
-            delegate.requestFailedWith(error: .retryRemote)
+            delegate.didFail(with: .retryRemote)
         } else {
             hasReachedEnd = true
-            delegate.requestCompletedSuccessfully(of: .coreData)
+            delegate.didFetchSuccessful(of: .coreData)
         }
     }
     
@@ -107,10 +105,11 @@ extension Feed {
         if pageNumber == 1 { articles = [] }
         fetchedPage = pageNumber
         let params: [String: Any] = ["country": "us", "page": pageNumber]
-        ApiManager.shared.getRequestWith(params: params, delegate: self)
+        ApiManager.shared.getRequest(for: params, self)
     }
 }
 
+//MARK: Feed Source
 extension Feed.Source {
     static func ==(lhs: Feed.Source, rhs: Feed.Source) -> Bool {
         switch (lhs,rhs) {
