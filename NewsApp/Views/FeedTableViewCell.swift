@@ -49,7 +49,7 @@ extension FeedTableViewCell {
         authorLabel.text = article.author
         dateLabel.text = article.date?.convertTo(string: "yyyy-MM-dd")
         descriptionLabel.text = article.content
-        let imageLink = article.imageLink?.absoluteString ?? ""
+        let imageLink = article.imageLink?.absoluteString
         newsImageView.setImage(with: imageLink)
     }
 }
