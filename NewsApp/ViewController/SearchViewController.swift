@@ -1,66 +1,53 @@
 //
-//  FeedViewController.swift
+//  SearchViewController.swift
 //  NewsApp
 //
-//  Created by Kautsya Kanu on 30/11/19.
-//  Copyright © 2019 Kautsya Kanu. All rights reserved.
+//  Created by Kautsya Kanu on 10/01/20.
+//  Copyright © 2020 Kautsya Kanu. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import SafariServices
 
-class FeedViewController: UIViewController {
+class SearchViewController: UIViewController {
     //MARK: Elements
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var loader: UIActivityIndicatorView!
-    @IBOutlet private weak var refreshButton: UIBarButtonItem!
-    private var refreshControl: UIRefreshControl!
     
     //MARK: Properties
-    private var feed: Feed!
-    private var feedSource = Feed.Source.coreData
+    private var feed: Search!
     private var currentPage = 1
     private var currentCount = 0
+    private var query = "Bitcoin"
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        feed = Feed(delegate: self)
+        feed = Search(delegate: self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        loader.startAnimating()
-        DispatchQueue.main.async {
-            self.feed.fetchCoreData()
-        }
+        fetchFeed()
     }
     
     private func setupTableView() {
         tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
-        refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        tableView?.addSubview(refreshControl)
     }
-}
-
-//MARK:- IBOutlets
-extension FeedViewController {
-    @IBAction private func refresh() {
-        currentPage = 1
-        currentCount = 0
-        refreshButton.isEnabled = false
-        feed.fetch(pageNumber: currentPage)
+    
+    private func fetchFeed() {
         DispatchQueue.main.async { [weak self] in
-            self?.tableView.reloadData()
-            self?.loader.startAnimating()
+            guard let self = self else { return }
+            self.loader.startAnimating()
+            self.loader.isHidden = false
+            self.feed.fetch(pageNumber: self.currentPage, for: self.query)
+            self.tableView?.reloadData()
         }
     }
 }
 
 //MARK:- TableView
-extension FeedViewController: UITableViewDataSource {
+extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var feedCount = feed.articles.count
         if shouldShowLoaderCell() { feedCount+=1 }
@@ -84,12 +71,12 @@ extension FeedViewController: UITableViewDataSource {
     }
     
     private func shouldShowLoaderCell() -> Bool {
-        return feedSource != .coreData && feed.articles.count > 0 && !feed.hasReachedEnd
+        return feed.articles.count > 0 && !feed.hasReachedEnd
     }
 }
 
 //MARK: UITableViewDelegate
-extension FeedViewController: UITableViewDelegate {
+extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let _ = cell as? LoaderTableViewCell else {
             return
@@ -99,7 +86,7 @@ extension FeedViewController: UITableViewDelegate {
 }
 
 //MARK: FeedTableViewCellProtocol
-extension FeedViewController: FeedTableViewCellProtocol {
+extension SearchViewController: FeedTableViewCellProtocol {
     func open(link: URL) {
         let safariViewController = SFSafariViewController(url: link)
         present(safariViewController, animated: true, completion: nil)
@@ -107,21 +94,13 @@ extension FeedViewController: FeedTableViewCellProtocol {
 }
 
 //MARK:- API Management
-extension FeedViewController: FeedProtocol {
-    func didFetchSuccessful(of source: Feed.Source) {
-        feedSource = source
-        switch source {
-        case .remote(let fetchedPage):
-            currentPage = fetchedPage
-        default:
-            break
-        }
+extension SearchViewController: SearchProtocol {
+    func didFetchSuccessfully(pageNumber: Int) {
+        currentPage = pageNumber
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.loader.stopAnimating()
-            self.refreshControl.endRefreshing()
             self.tableView.insertRows(at: self.newIndexPaths(), with: .automatic)
-            self.refreshButton.isEnabled = true
             self.currentCount = self.feed.articles.count
         }
     }
@@ -129,10 +108,8 @@ extension FeedViewController: FeedProtocol {
     private func newIndexPaths() -> [IndexPath] {
         var indexPaths: [IndexPath] = []
         var newCount = feed.articles.count
-        if feedSource == .remote(pageNumber: -1) {
-            if currentPage == 1 { newCount += 1 }   //Inserting LoaderCell at end
-            if feed.hasReachedEnd { newCount -= 1 } //Removing LoaderCell at end
-        }
+        if currentPage == 1 { newCount += 1 }   //Inserting LoaderCell at end
+        if feed.hasReachedEnd { newCount -= 1 } //Removing LoaderCell at end
         for i in currentCount..<newCount {
             let indexPath = IndexPath(row: i, section: 0)
             indexPaths.append(indexPath)
@@ -141,19 +118,13 @@ extension FeedViewController: FeedProtocol {
     }
     
     func didFail(with error: CustomError) {
-        switch error {
-        case .retryRemote:
-            feed.fetch(pageNumber: currentPage)
-        default:
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.loader.stopAnimating()
-                self.refreshControl.endRefreshing()
-                
-                let retry = CustomAlertAction.retry(self.retryFetching())
-                let alert = CustomAlert(with: error, actions: [retry])
-                self.present(alert, animated: true, completion: nil)
-            }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.loader.stopAnimating()
+            
+            let retry = CustomAlertAction.retry(self.retryFetching())
+            let alert = CustomAlert(with: error, actions: [retry])
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -161,6 +132,21 @@ extension FeedViewController: FeedProtocol {
         if currentPage == 1 {
             loader.startAnimating()
         }
-        feed.fetch(pageNumber: currentPage)
+        feed.fetch(pageNumber: currentPage, for: query)
     }
 }
+
+//MARK:- UISearchBar
+extension SearchViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text == "" {
+            searchBar.text = "Bitcoin"
+        }
+        query = searchBar.text ?? "Bitcoin"
+        currentPage = 1
+        currentCount = 0
+        fetchFeed()
+        searchBar.endEditing(true)
+    }
+}
+
