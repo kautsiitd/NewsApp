@@ -149,4 +149,3 @@ extension SearchViewController: UISearchBarDelegate {
         searchBar.endEditing(true)
     }
 }
-
