@@ -40,8 +40,13 @@ class CustomImageView: UIImageView {
 
 //MARK:- Available Functions
 extension CustomImageView {
-    func setImage(with urlString: String) {
+    func setImage(with url: URL?) {
+        setImage(with: url?.absoluteString)
+    }
+    
+    func setImage(with urlString: String?) {
         image = nil
+        guard  let urlString = urlString else { return }
         self.urlString = urlString
         loader.startAnimating()
         //Checking cache
