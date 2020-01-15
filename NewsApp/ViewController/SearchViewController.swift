@@ -38,6 +38,8 @@ class SearchViewController: UIViewController {
     private func fetchFeed() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            self.currentPage = 1
+            self.currentCount = 0
             self.loader.startAnimating()
             self.loader.isHidden = false
             self.feed.fetch(pageNumber: self.currentPage, for: self.query)
@@ -138,13 +140,13 @@ extension SearchViewController: SearchProtocol {
 
 //MARK:- UISearchBar
 extension SearchViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if searchBar.text == "" {
-            searchBar.text = "Bitcoin"
-        }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         query = searchBar.text ?? "Bitcoin"
-        currentPage = 1
-        currentCount = 0
+        fetchFeed()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        query = searchBar.text ?? "Bitcoin"
         fetchFeed()
         searchBar.endEditing(true)
     }

@@ -12,6 +12,8 @@ extension Date {
     func convertTo(string: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = string
+        formatter.amSymbol = "AM"
+        formatter.pmSymbol = "PM"
         return formatter.string(from: self)
     }
 }

@@ -47,7 +47,7 @@ extension FeedTableViewCell {
         titleLabel.text = article.title
         linkButton.isEnabled = (article.newsLink != nil)
         authorLabel.text = article.author
-        dateLabel.text = article.date?.convertTo(string: "yyyy-MM-dd")
+        dateLabel.text = article.date?.convertTo(string: "dd MMM h:mm a")
         descriptionLabel.text = article.content
         let imageLink = article.imageLink?.absoluteString
         newsImageView.setImage(with: imageLink)
