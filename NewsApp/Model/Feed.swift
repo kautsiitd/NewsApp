@@ -23,7 +23,7 @@ class Feed: BaseClass {
     //MARK: Properties
     private let context: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = CoreDataStack.shared.persistentContainer.viewContext
+        context.parent = CoreDataStack.shared.context
         return context
     }()
     private var delegate: FeedProtocol
