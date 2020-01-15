@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Today View Controller-->
+        <scene sceneID="cwh-vc-ff4">
+            <objects>
+                <viewController id="M4Y-Lb-cyx" customClass="TodayViewController" customModule="NewsApp_Widget" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="timesofindia.indiatimes.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fkP-fP-zCP">
+                                <rect key="frame" x="16" y="84.5" width="135" height="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" white="0.98999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="highlightedColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hrithik Roshan Wants to Know Who This TikTok Dancer Is" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ae-5p-CyF">
+                                <rect key="frame" x="16" y="96.5" width="208" height="33.5"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="PRp-Lf-2Em">
+                                <rect key="frame" x="229" y="84.5" width="75" height="75"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="75" id="amR-q0-XXT"/>
+                                    <constraint firstAttribute="width" secondItem="PRp-Lf-2Em" secondAttribute="height" multiplier="1:1" id="hnD-75-5Qo"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="fkP-fP-zCP" firstAttribute="top" secondItem="PRp-Lf-2Em" secondAttribute="top" id="RRt-CF-ibQ"/>
+                            <constraint firstItem="5Ae-5p-CyF" firstAttribute="leading" secondItem="fkP-fP-zCP" secondAttribute="leading" id="WN0-ge-w5e"/>
+                            <constraint firstItem="fkP-fP-zCP" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="16" id="ZFZ-TS-JNe"/>
+                            <constraint firstItem="PRp-Lf-2Em" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fkP-fP-zCP" secondAttribute="trailing" constant="20" id="aQS-ho-qXc"/>
+                            <constraint firstItem="PRp-Lf-2Em" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Ae-5p-CyF" secondAttribute="trailing" constant="5" id="dyR-qS-N8T"/>
+                            <constraint firstItem="PRp-Lf-2Em" firstAttribute="trailing" secondItem="ssy-KU-ocm" secondAttribute="trailing" constant="-16" id="jNU-4N-4ZE"/>
+                            <constraint firstItem="PRp-Lf-2Em" firstAttribute="centerY" secondItem="ssy-KU-ocm" secondAttribute="centerY" id="lll-jN-fTf"/>
+                            <constraint firstItem="5Ae-5p-CyF" firstAttribute="top" secondItem="fkP-fP-zCP" secondAttribute="bottom" id="pcu-2e-TEf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="200"/>
+                    <connections>
+                        <outlet property="imageView" destination="PRp-Lf-2Em" id="dxj-0H-mmY"/>
+                        <outlet property="sourceLabel" destination="fkP-fP-zCP" id="t9z-Yj-xnJ"/>
+                        <outlet property="titleLabel" destination="5Ae-5p-CyF" id="uDc-dY-Kke"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="139" y="122"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="NoImage" width="360" height="260"/>
+    </resources>
+</document>
