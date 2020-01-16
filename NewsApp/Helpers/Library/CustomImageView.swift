@@ -20,6 +20,9 @@ class CustomImageView: UIImageView {
     //MARK: Elements
     private var loader: UIActivityIndicatorView!
     
+    //MARK:- IBInspectable
+    @IBInspectable private var shouldPersist: Bool = false
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupLoader()
@@ -34,7 +37,8 @@ class CustomImageView: UIImageView {
         loader.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
 }
-    
+
+//MARK:- Available Functions
 extension CustomImageView {
     func setImage(with url: URL?) {
         setImage(with: url?.absoluteString)
@@ -67,9 +71,11 @@ extension CustomImageView {
         
         //Async Image fetching from CoreData or Remote
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            guard let self = self else { return }
             //Checking CoreData
-            if let coreImage = self?.fetchCoreImage(with: urlString) {
-                self?.setImage(image: coreImage, for: urlString, shouldCache: true, animate: true)
+            if self.shouldPersist,
+                let coreImage = self.fetchCoreImage(with: urlString) {
+                self.setImage(image: coreImage, for: urlString, shouldCache: true, animate: true)
                 return
             }
             //Fetching Remote Image
@@ -93,6 +99,8 @@ extension CustomImageView {
                           shouldCache: Bool = false, animate: Bool = false) {
         if shouldCache {
             imageCache.setObject(image, forKey: urlString as NSString)
+        }
+        if shouldCache && shouldPersist {
             let coreImage = Image(context: context)
             coreImage.urlString = urlString
             coreImage.data = image.pngData() as NSData?
