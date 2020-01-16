@@ -44,6 +44,7 @@
 		63DF507623CF7F45009486D5 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4C68123BB1E69000111F3 /* Image.swift */; };
 		63DF507723CF7F5D009486D5 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D91D0123BF1E8B00F1CDE4 /* URL.swift */; };
 		63DF507823CF80F8009486D5 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4C68323BB47EC000111F3 /* CustomImageView.swift */; };
+		63DF507A23CF8459009486D5 /* TodayCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF507923CF8459009486D5 /* TodayCellView.swift */; };
 		63E7DAAB2395F36F002ACA93 /* LoaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */; };
 		63E7E7B2239674E300715D97 /* NewsApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63E7E7B0239674E300715D97 /* NewsApp.xcdatamodeld */; };
 /* End PBXBuildFile section */
@@ -103,6 +104,7 @@
 		63DF505E23CED83D009486D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63DF506C23CEF3F9009486D5 /* NewsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewsApp.entitlements; sourceTree = "<group>"; };
 		63DF506D23CEF44B009486D5 /* NewsApp Widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "NewsApp Widget.entitlements"; sourceTree = "<group>"; };
+		63DF507923CF8459009486D5 /* TodayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCellView.swift; sourceTree = "<group>"; };
 		63E7DAAA2395F36F002ACA93 /* LoaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderTableViewCell.swift; sourceTree = "<group>"; };
 		63E7E7B1239674E300715D97 /* NewsApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NewsApp.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -246,6 +248,7 @@
 				63DF505923CED83D009486D5 /* TodayViewController.swift */,
 				63DF505B23CED83D009486D5 /* MainInterface.storyboard */,
 				63DF505E23CED83D009486D5 /* Info.plist */,
+				63DF507923CF8459009486D5 /* TodayCellView.swift */,
 			);
 			path = "NewsApp Widget";
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				63DF506F23CEF6F1009486D5 /* NewsApp.xcdatamodeld in Sources */,
 				63DF507323CF7ECE009486D5 /* ArticleRemote.swift in Sources */,
 				63DF507623CF7F45009486D5 /* Image.swift in Sources */,
+				63DF507A23CF8459009486D5 /* TodayCellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
