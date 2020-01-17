@@ -68,8 +68,8 @@ class Feed: BaseClass {
     }
     
     private func deleteOld() {
-        let imageDeleteRequest = Image.deleteAll()
-        _ = try? context.execute(imageDeleteRequest)
+//        let imageDeleteRequest = Image.deleteAll()
+//        _ = try? context.execute(imageDeleteRequest)
         let articlesDeleteRequest = Article.deleteAll()
         _ = try? context.execute(articlesDeleteRequest)
     }
