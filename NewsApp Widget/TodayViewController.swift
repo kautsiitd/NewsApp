@@ -9,8 +9,6 @@
 import UIKit
 import NotificationCenter
 
-let imageCache = NSCache<NSString, UIImage>()
-
 class TodayViewController: UIViewController {
     //MARK: Elements
     @IBOutlet private weak var loader: UIActivityIndicatorView!
@@ -22,7 +20,6 @@ class TodayViewController: UIViewController {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        imageCache.countLimit = 40
         feed = Feed(delegate: self)
     }
     

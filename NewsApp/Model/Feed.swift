@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import CustomImageView
 
 protocol FeedProtocol {
     func didFetchSuccessful(of source: Feed.Source)

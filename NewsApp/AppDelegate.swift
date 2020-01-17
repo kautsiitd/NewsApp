@@ -8,12 +8,9 @@
 
 import UIKit
 
-let imageCache = NSCache<NSString, UIImage>()
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        imageCache.countLimit = 40
         return true
     }
     
