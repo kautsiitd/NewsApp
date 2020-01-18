@@ -38,7 +38,7 @@
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="highlightedColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="oCz-WA-2gr" customClass="CustomImageView" customModule="NewsApp_Widget" customModuleProvider="target">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="oCz-WA-2gr" customClass="CustomImageView" customModule="CustomImageView">
                                                     <rect key="frame" x="215" y="5" width="75" height="75"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="oCz-WA-2gr" secondAttribute="height" multiplier="1:1" id="FtT-Pz-fu4"/>

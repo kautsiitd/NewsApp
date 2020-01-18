@@ -68,8 +68,7 @@ class Feed: BaseClass {
     }
     
     private func deleteOld() {
-//        let imageDeleteRequest = Image.deleteAll()
-//        _ = try? context.execute(imageDeleteRequest)
+        CustomImageView.clearOldData()
         let articlesDeleteRequest = Article.deleteAll()
         _ = try? context.execute(articlesDeleteRequest)
     }
