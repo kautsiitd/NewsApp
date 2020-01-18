@@ -9,19 +9,25 @@
 import Foundation
 import CoreData
 
-class Source {
+struct Source {
     //MARK: Properties
-    private var id: Int
-    var name: String
+    private let id: Int
+    let name: String
     
     init(response: [String: Any?]) {
         id = response["id"] as? Int ?? 0
         name = response["name"] as? String ?? ""
     }
+    
+    init(name: String) {
+        id = 0
+        self.name = name
+    }
 }
 
 class ArticleRemote {
     //MARK: Properties
+    var source: Source
     var author: String
     var title: String
     var description: String
@@ -38,6 +44,9 @@ class ArticleRemote {
     }()
     
     init(response: [String: Any?]) {
+        let sourceDict = response["source"] as? [String: Any?] ?? [:]
+        source = Source(response: sourceDict)
+        
         author = response["author"] as? String ?? ""
         title = response["title"] as? String ?? ""
         description = response["description"] as? String ?? ""
@@ -56,6 +65,7 @@ class ArticleRemote {
     }
     
     init(article: Article) {
+        source = Source(name: article.source)
         author = article.author
         title = article.title
         description = article.content

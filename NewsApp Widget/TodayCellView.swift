@@ -23,7 +23,7 @@ class TodayCellView: UITableViewCell {
 
 extension TodayCellView {
     func setCell(with article: Article) {
-        sourceLabel.text = article.author
+        sourceLabel.text = article.source
         titleLabel.text = article.title
         customImageView.setImage(with: article.imageLink)
     }
