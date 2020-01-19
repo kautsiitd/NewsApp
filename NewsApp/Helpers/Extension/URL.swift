@@ -17,10 +17,4 @@ extension URL {
         let urlString = string + "?" + paramsString
         self.init(string: urlString, relativeTo: url)
     }
-    
-    func safeURL() -> URL? {
-        let isValid = self.absoluteString.starts(with: "https://")
-        if isValid { return self }
-        return nil
-    }
 }

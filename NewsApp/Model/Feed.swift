@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import CustomImageView
 
 protocol FeedProtocol {
     func didFetchSuccessful(of source: Feed.Source)
@@ -23,7 +24,7 @@ class Feed: BaseClass {
     //MARK: Properties
     private let context: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = CoreDataStack.shared.persistentContainer.viewContext
+        context.parent = CoreDataStack.shared.context
         return context
     }()
     private var delegate: FeedProtocol
@@ -67,8 +68,7 @@ class Feed: BaseClass {
     }
     
     private func deleteOld() {
-        let imageDeleteRequest = Image.deleteAll()
-        _ = try? context.execute(imageDeleteRequest)
+        CustomImageView.clearOldData()
         let articlesDeleteRequest = Article.deleteAll()
         _ = try? context.execute(articlesDeleteRequest)
     }
@@ -102,7 +102,7 @@ extension Feed {
     }
     
     func fetch(pageNumber: Int) {
-        if pageNumber == 1 { articles = [] }
+        if pageNumber <= 1 { articles = [] }
         fetchedPage = pageNumber
         let params: [String: Any] = ["country": "us", "page": pageNumber]
         ApiManager.shared.getRequest(for: params, self)
