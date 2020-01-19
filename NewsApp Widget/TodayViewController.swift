@@ -51,7 +51,6 @@ extension TodayViewController: NCWidgetProviding {
     
     func widgetPerformUpdate(completionHandler: @escaping (NCUpdateResult) -> Void) {
         self.completionHandler = completionHandler
-        feed.fetch(pageNumber: 0)
     }
 }
 
@@ -90,11 +89,19 @@ extension TodayViewController: FeedProtocol {
             self?.loader.stopAnimating()
             self?.refreshView()
         }
-        if source == .remote(pageNumber: -1) {
+        switch source {
+        case .coreData:
+            feed.fetch(pageNumber: 1)
+        default:
             completionHandler(.newData)
         }
     }
     func didFail(with error: CustomError) {
-        print(error.description)
+        switch error {
+        case .retryRemote:
+            feed.fetch(pageNumber: 1)
+        default:
+            print(error.description)
+        }
     }
 }
