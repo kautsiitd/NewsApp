@@ -17,6 +17,7 @@ class TodayViewController: UIViewController {
     private var feed: Feed!
     private let numberOfHeadlines = 3
     private var currentState: NCWidgetDisplayMode = .compact
+    private var completionHandler: (NCUpdateResult) -> Void = {_ in}
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -46,6 +47,11 @@ extension TodayViewController: NCWidgetProviding {
         var size = tableView.contentSize
         size.height += 8
         preferredContentSize = size
+    }
+    
+    func widgetPerformUpdate(completionHandler: @escaping (NCUpdateResult) -> Void) {
+        self.completionHandler = completionHandler
+        feed.fetch(pageNumber: 0)
     }
 }
 
@@ -83,6 +89,9 @@ extension TodayViewController: FeedProtocol {
         DispatchQueue.main.async { [weak self] in
             self?.loader.stopAnimating()
             self?.refreshView()
+        }
+        if source == .remote(pageNumber: -1) {
+            completionHandler(.newData)
         }
     }
     func didFail(with error: CustomError) {
