@@ -71,7 +71,9 @@ extension TodayViewController: UITableViewDataSource {
 
 extension TodayViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let _ = feed.articles[indexPath.row]
+        let article = feed.articles[indexPath.row]
+        guard let newsLink = article.newsLink else { return }
+        extensionContext?.open(newsLink, completionHandler: nil)
     }
 }
 
