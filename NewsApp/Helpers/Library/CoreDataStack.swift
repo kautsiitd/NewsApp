@@ -13,27 +13,41 @@ class CoreDataStack {
     //MARK: Properties
     static let shared = CoreDataStack()
     private init() {}
+    let modelName = "NewsApp"
     
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "NewsApp")
-        container.loadPersistentStores(completionHandler: {
-            (storeDescription, error) in
-//            print(storeDescription)
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
-        return container
+    lazy var context:NSManagedObjectContext = {
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        managedObjectContext.persistentStoreCoordinator = coordinator
+        return managedObjectContext
     }()
     
-    func save() {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch let error as NSError {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
+    lazy var coordinator: NSPersistentStoreCoordinator = {
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+        var storeURL = appDocumentDirectory
+        storeURL.appendPathComponent(modelName)
+        let options = [NSMigratePersistentStoresAutomaticallyOption: true]
+        _ = try? coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
+        return coordinator
+    }()
+    
+    lazy var appDocumentDirectory: URL = {
+        let fileManager = FileManager.default
+        if let url = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.Kauts.NewsApp") {
+            return url
         }
+        let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
+        return urls.first!
+    }()
+    
+    var managedObjectModel: NSManagedObjectModel = {
+        let bundle = Bundle.main
+        let modelURL = bundle.url(forResource: "NewsApp", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
+    }()
+}
+
+extension CoreDataStack {
+    func save() {
+        if context.hasChanges { try? context.save() }
     }
 }

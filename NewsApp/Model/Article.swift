@@ -11,6 +11,7 @@ import CoreData
 
 class Article: NSManagedObject {
     //MARK: Properties
+    @NSManaged var source: String
     @NSManaged var title: String
     @NSManaged var newsLink: URL?
     @NSManaged var imageLink: URL?
@@ -32,6 +33,7 @@ class Article: NSManagedObject {
     }
     
     func setData(articleRemote: ArticleRemote) {
+        source = articleRemote.source.name
         title = articleRemote.title
         newsLink = articleRemote.newsLink
         imageLink = articleRemote.imageLink

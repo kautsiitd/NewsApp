@@ -1,46 +1,40 @@
 //
-//  Feed.swift
+//  Search.swift
 //  NewsApp
 //
-//  Created by Kautsya Kanu on 02/12/19.
-//  Copyright © 2019 Kautsya Kanu. All rights reserved.
+//  Created by Kautsya Kanu on 10/01/20.
+//  Copyright © 2020 Kautsya Kanu. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreData
-import CustomImageView
 
-protocol FeedProtocol {
-    func didFetchSuccessful(of source: Feed.Source)
+protocol SearchProtocol {
+    func didFetchSuccessfully(pageNumber: Int)
     func didFail(with error: CustomError)
 }
 
-class Feed: BaseClass {
-    enum Source {
-        case coreData
-        case remote(pageNumber: Int)
-    }
+class Search: BaseClass {
     //MARK: Properties
     private let context: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         context.parent = CoreDataStack.shared.context
         return context
     }()
-    private var delegate: FeedProtocol
+    private var delegate: SearchProtocol
     private var totalResults: Int = 0
     private var fetchedPage: Int = 0
+    private var query: String = ""
     
     var articles: [Article] = []
     var hasReachedEnd: Bool = false
     
-    init(delegate: FeedProtocol) {
+    init(delegate: SearchProtocol) {
         self.delegate = delegate
     }
     
     //MARK: ApiManagement
     override func apiEndPoint() -> String {
-        return "v2/top-headlines"
+        return "v2/everything"
     }
     
     override func parse(_ response: [String : Any]) {
@@ -64,19 +58,10 @@ class Feed: BaseClass {
             article.setData(articleRemote: articleRemote)
             articles.append(article)
         }
-        try? context.save()
-    }
-    
-    private func deleteOld() {
-        CustomImageView.clearOldData()
-        let articlesDeleteRequest = Article.deleteAll()
-        _ = try? context.execute(articlesDeleteRequest)
     }
     
     override func didFetchSuccessfully() {
-        //Delete old coreData only when there is new feed fetch data is available
-        if fetchedPage == 1 { deleteOld() }
-        delegate.didFetchSuccessful(of: .remote(pageNumber: fetchedPage))
+        delegate.didFetchSuccessfully(pageNumber: fetchedPage)
     }
     
     override func didFail(with error: CustomError) {
@@ -85,44 +70,27 @@ class Feed: BaseClass {
 }
 
 //MARK: Available functions
-extension Feed {
-    func fetchCoreData() {
-        articles = (try? context.fetch(Article.fetchAll())) ?? []
-        if articles.isEmpty {
-            delegate.didFail(with: .retryRemote)
-        } else {
-            hasReachedEnd = true
-            delegate.didFetchSuccessful(of: .coreData)
-        }
-    }
-    
+extension Search {
     func fetch(nextOf pageNumber: Int) {
         if fetchedPage == pageNumber + 1 { return } //Requesting to fetch same page again
-        fetch(pageNumber: pageNumber + 1)
+        fetch(pageNumber: pageNumber + 1, for: query)
     }
     
-    func fetch(pageNumber: Int) {
-        if pageNumber <= 1 { articles = [] }
+    func fetch(pageNumber: Int, for query: String) {
+        if pageNumber == 1 {
+            self.query = query
+            articles = []
+        }
         fetchedPage = pageNumber
-        let params: [String: Any] = ["country": "us", "page": pageNumber]
+        let params = getParams(for: query, pageNumber: pageNumber)
         ApiManager.shared.getRequest(for: params, self)
     }
-}
-
-//MARK: Feed Source
-extension Feed.Source {
-    static func ==(lhs: Feed.Source, rhs: Feed.Source) -> Bool {
-        switch (lhs,rhs) {
-        case (.coreData, .coreData):
-            return true
-        case (.remote(_), .remote(_)):
-            return true
-        default:
-            return false
-        }
-    }
     
-    static func !=(lhs: Feed.Source, rhs: Feed.Source) -> Bool {
-        return !(lhs == rhs)
+    private func getParams(for query: String, pageNumber: Int) -> [String: Any] {
+        var dict: [String: Any] = [:]
+        dict["q"] = query
+        dict["page"] = pageNumber
+        dict["sortBy"] = "publishedAt"
+        return dict
     }
 }
