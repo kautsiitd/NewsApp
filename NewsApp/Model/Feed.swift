@@ -43,7 +43,7 @@ class Feed: BaseClass {
         return "v2/top-headlines"
     }
     
-    override func parse(_ response: [String : Any]) {
+    override func parse(_ response: [String : Any], for params: [String: Any]) {
         _ = response["status"] as? String ?? "Fail"
         totalResults = response["totalResults"] as? Int ?? 0
         
@@ -73,7 +73,7 @@ class Feed: BaseClass {
         _ = try? context.execute(articlesDeleteRequest)
     }
     
-    override func didFetchSuccessfully() {
+    override func didFetchSuccessfully(for params: [String: Any]) {
         //Delete old coreData only when there is new feed fetch data is available
         if fetchedPage == 1 { deleteOld() }
         delegate.didFetchSuccessful(of: .remote(pageNumber: fetchedPage))

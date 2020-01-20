@@ -34,8 +34,8 @@ class ApiManager {
                 return
             }
             
-            delegate.parse(response)
-            delegate.didFetchSuccessfully()
+            delegate.parse(response, for: params)
+            delegate.didFetchSuccessfully(for: params)
         }
         task.resume()
     }

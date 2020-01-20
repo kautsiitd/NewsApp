@@ -45,7 +45,6 @@ class SearchViewController: UIViewController {
             self.loader.isHidden = false
             self.feed.fetch(pageNumber: self.currentPage, for: self.query)
             self.tableView.reloadData()
-            self.tableView.layoutIfNeeded()
         }
     }
 }
@@ -144,7 +143,7 @@ extension SearchViewController: SearchProtocol {
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {
+        timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {
             [weak self] _ in
             self?.query = searchBar.text ?? "Bitcoin"
             self?.fetchFeed()
