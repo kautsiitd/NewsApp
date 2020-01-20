@@ -39,11 +39,11 @@ class Search: BaseClass {
     
     override func parse(_ response: [String : Any], for params: [String: Any]) {
         _ = response["status"] as? String ?? "Fail"
-        totalResults = response["totalResults"] as? Int ?? 0
         
         let remoteArticlesDict = response["articles"] as? [[String: Any?]] ?? []
         if isLatest(params) {
             DispatchQueue.main.async {
+                self.totalResults = response["totalResults"] as? Int ?? 0
                 self.parse(remoteArticlesDict)
                 self.hasReachedEnd = self.totalResults == self.articles.count
             }
