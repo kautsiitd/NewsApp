@@ -41,7 +41,7 @@ class FeedViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        tableView?.addSubview(refreshControl)
+        tableView.addSubview(refreshControl)
     }
 }
 

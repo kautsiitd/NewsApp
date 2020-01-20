@@ -37,14 +37,23 @@ class Search: BaseClass {
         return "v2/everything"
     }
     
-    override func parse(_ response: [String : Any]) {
+    override func parse(_ response: [String : Any], for params: [String: Any]) {
         _ = response["status"] as? String ?? "Fail"
         totalResults = response["totalResults"] as? Int ?? 0
         
         let remoteArticlesDict = response["articles"] as? [[String: Any?]] ?? []
-        parse(remoteArticlesDict)
-        
-        hasReachedEnd = totalResults == articles.count
+        if isLatest(params) {
+            DispatchQueue.main.async {
+                self.parse(remoteArticlesDict)
+                self.hasReachedEnd = self.totalResults == self.articles.count
+            }
+        }
+    }
+    
+    private func isLatest(_ params: [String: Any]) -> Bool {
+        let queryFetched = params["q"] as? String
+        let urlQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        return queryFetched == urlQuery
     }
     
     private func parse(_ remoteArticlesDict: [[String: Any?]]) {
@@ -54,14 +63,16 @@ class Search: BaseClass {
             remoteArticles.append(articleRemote)
         }
         for articleRemote in remoteArticles {
-            let article = Article(context: context)
+            let article = Article(context: self.context)
             article.setData(articleRemote: articleRemote)
-            articles.append(article)
+            self.articles.append(article)
         }
     }
     
-    override func didFetchSuccessfully() {
-        delegate.didFetchSuccessfully(pageNumber: fetchedPage)
+    override func didFetchSuccessfully(for params: [String : Any]) {
+        if isLatest(params) {
+            delegate.didFetchSuccessfully(pageNumber: fetchedPage)
+        }
     }
     
     override func didFail(with error: CustomError) {
@@ -79,7 +90,7 @@ extension Search {
     func fetch(pageNumber: Int, for query: String) {
         if pageNumber == 1 {
             self.query = query
-            articles = []
+            articles.removeAll()
         }
         fetchedPage = pageNumber
         let params = getParams(for: query, pageNumber: pageNumber)
@@ -88,7 +99,7 @@ extension Search {
     
     private func getParams(for query: String, pageNumber: Int) -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["q"] = query
+        dict["q"] = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         dict["page"] = pageNumber
         dict["sortBy"] = "publishedAt"
         return dict

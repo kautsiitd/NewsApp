@@ -19,6 +19,7 @@ class SearchViewController: UIViewController {
     private var currentPage = 1
     private var currentCount = 0
     private var query = "Bitcoin"
+    private var timer: Timer?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -38,10 +39,12 @@ class SearchViewController: UIViewController {
     private func fetchFeed() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            self.currentPage = 1
+            self.currentCount = 0
             self.loader.startAnimating()
             self.loader.isHidden = false
             self.feed.fetch(pageNumber: self.currentPage, for: self.query)
-            self.tableView?.reloadData()
+            self.tableView.reloadData()
         }
     }
 }
@@ -138,14 +141,16 @@ extension SearchViewController: SearchProtocol {
 
 //MARK:- UISearchBar
 extension SearchViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {
+            [weak self] _ in
+            self?.query = searchBar.text ?? "Bitcoin"
+            self?.fetchFeed()
+        })
+    }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if searchBar.text == "" {
-            searchBar.text = "Bitcoin"
-        }
-        query = searchBar.text ?? "Bitcoin"
-        currentPage = 1
-        currentCount = 0
-        fetchFeed()
         searchBar.endEditing(true)
     }
 }

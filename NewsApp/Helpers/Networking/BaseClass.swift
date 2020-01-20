@@ -9,18 +9,18 @@
 import Foundation
 
 protocol ApiProtocol {
-    func didFetchSuccessfully()
+    func didFetchSuccessfully(for params: [String: Any])
     func didFail(with error: CustomError)
 }
 
 protocol BaseClassProtocol: ApiProtocol {
     func apiEndPoint() -> String
-    func parse(_ response: [String: Any])
+    func parse(_ response: [String: Any], for params: [String: Any])
 }
 
 class BaseClass: BaseClassProtocol {
     func apiEndPoint() -> String { return "" }
-    func parse(_ response: [String : Any]) {}
-    func didFetchSuccessfully() {}
+    func parse(_ response: [String : Any], for params: [String: Any]) {}
+    func didFetchSuccessfully(for params: [String: Any]) {}
     func didFail(with error: CustomError) {}
 }
