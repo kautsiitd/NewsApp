@@ -88,7 +88,7 @@ extension Search {
     
     private func getParams(for query: String, pageNumber: Int) -> [String: Any] {
         var dict: [String: Any] = [:]
-        dict["q"] = query
+        dict["q"] = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         dict["page"] = pageNumber
         dict["sortBy"] = "publishedAt"
         return dict

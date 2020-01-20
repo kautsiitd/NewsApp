@@ -192,7 +192,7 @@
                         <subviews>
                             <searchBar contentMode="redraw" placeholder="Bitcoin" translatesAutoresizingMaskIntoConstraints="NO" id="sYH-8P-Oa9">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                 <connections>
                                     <outlet property="delegate" destination="jjO-LQ-nSO" id="kD3-2g-feb"/>
                                 </connections>
