@@ -21,6 +21,8 @@
 		636DE08123925C2200305557 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 636DE07F23925C2200305557 /* LaunchScreen.storyboard */; };
 		638097F923C88D1900826C2E /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638097F823C88D1900826C2E /* Search.swift */; };
 		638097FB23C8980700826C2E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638097FA23C8980700826C2E /* SearchViewController.swift */; };
+		63876D2523EB722A00DCFEFB /* CustomImageView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63DF50A623D09F63009486D5 /* CustomImageView.framework */; };
+		63876D2623EB722A00DCFEFB /* CustomImageView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63DF50A623D09F63009486D5 /* CustomImageView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		63A4C65E23BA42C7000111F3 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A4C65D23BA42C7000111F3 /* Article.swift */; };
 		63AB443D23C3290500B20EDD /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AB443C23C3290500B20EDD /* CustomAlert.swift */; };
 		63B998AB2392FE63004BAE66 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B998AA2392FE63004BAE66 /* ApiManager.swift */; };
@@ -65,6 +67,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		63876D2723EB722B00DCFEFB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				63876D2623EB722A00DCFEFB /* CustomImageView.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63CD5E3623D3CB3300619E21 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63876D2523EB722A00DCFEFB /* CustomImageView.framework in Frameworks */,
 				63DF505723CED83D009486D5 /* NotificationCenter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,6 +330,7 @@
 				63DF505023CED83D009486D5 /* Sources */,
 				63DF505123CED83D009486D5 /* Frameworks */,
 				63DF505223CED83D009486D5 /* Resources */,
+				63876D2723EB722B00DCFEFB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
