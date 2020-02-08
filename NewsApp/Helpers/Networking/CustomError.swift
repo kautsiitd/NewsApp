@@ -12,7 +12,7 @@ enum CustomError {
     case invalidURL
     case invalidData
     case retryRemote
-    case custom(error: NSError?)
+    case custom(_ error: Error)
 
     var title: String {
         switch self {
@@ -22,8 +22,8 @@ enum CustomError {
             return "InvalidData"
         case .retryRemote:
             return "Retry"
-        case let .custom(error):
-            return error?.domain ?? "Oops!!"
+        case .custom(_):
+            return "Oops!!"
         }
     }
     
@@ -36,7 +36,7 @@ enum CustomError {
         case .retryRemote:
             return "Try Again!!"
         case let .custom(error):
-            return error?.localizedDescription ?? "Something went wrong 😭"
+            return error.localizedDescription
         }
     }
 }

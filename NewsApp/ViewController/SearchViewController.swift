@@ -125,7 +125,7 @@ extension SearchViewController: SearchProtocol {
             guard let self = self else { return }
             self.loader.stopAnimating()
             
-            let retry = CustomAlertAction.retry(self.retryFetching())
+            let retry = CustomAlertAction.retry(self.retryFetching)
             let alert = CustomAlert(with: error, actions: [retry])
             self.present(alert, animated: true, completion: nil)
         }

@@ -150,7 +150,7 @@ extension FeedViewController: FeedProtocol {
                 self.loader.stopAnimating()
                 self.refreshControl.endRefreshing()
                 
-                let retry = CustomAlertAction.retry(self.retryFetching())
+                let retry = CustomAlertAction.retry(self.retryFetching)
                 let alert = CustomAlert(with: error, actions: [retry])
                 self.present(alert, animated: true, completion: nil)
             }

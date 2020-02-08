@@ -9,7 +9,7 @@
 import UIKit
 
 enum CustomAlertAction {
-    case retry(_ handler: ()?)
+    case retry(_ handler: (() -> Void)?)
     case ok
     
     func title() -> String {
@@ -28,7 +28,7 @@ enum CustomAlertAction {
     
     func handler() -> ((UIAlertAction) -> Void)? {
         switch self {
-        case .retry(let action): return {_ in action}
+        case .retry(let action): return {_ in action?()}
         case .ok: return nil
         }
     }
