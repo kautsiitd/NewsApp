@@ -16,7 +16,7 @@ class CoreDataStack {
     let modelName = "NewsApp"
     
     lazy var context:NSManagedObjectContext = {
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
@@ -44,10 +44,4 @@ class CoreDataStack {
         let modelURL = bundle.url(forResource: "NewsApp", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
-}
-
-extension CoreDataStack {
-    func save() {
-        if context.hasChanges { try? context.save() }
-    }
 }

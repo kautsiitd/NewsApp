@@ -2,43 +2,76 @@
 //  Article.swift
 //  NewsApp
 //
-//  Created by Kautsya Kanu on 27/12/19.
+//  Created by Kautsya Kanu on 02/12/19.
 //  Copyright © 2019 Kautsya Kanu. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
-class Article: NSManagedObject {
+struct Source {
     //MARK: Properties
-    @NSManaged var source: String
-    @NSManaged var title: String
-    @NSManaged var newsLink: URL?
-    @NSManaged var imageLink: URL?
-    @NSManaged var author: String
-    @NSManaged var date: Date?
-    @NSManaged var content: String
+    private let id: Int
+    let name: String
     
-    @nonobjc class func fetchAll() -> NSFetchRequest<Article> {
-        let request = NSFetchRequest<Article>(entityName: "\(Article.self)")
-        let dateTimeSort = NSSortDescriptor(key: #keyPath(Article.date), ascending: false)
-        request.sortDescriptors = [dateTimeSort]
-        return request
+    init(response: [String: Any?]) {
+        id = response["id"] as? Int ?? 0
+        name = response["name"] as? String ?? ""
     }
     
-    @nonobjc class func deleteAll() -> NSBatchDeleteRequest {
-        let fetchRequest = NSFetchRequest<Article>(entityName: "\(Article.self)")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-        return deleteRequest
+    init(name: String) {
+        id = 0
+        self.name = name
+    }
+}
+
+class Article {
+    //MARK: Properties
+    var source: Source
+    var author: String
+    var title: String
+    var description: String
+    var newsLink: URL?
+    var imageLink: URL?
+    var publishedAt: Date?
+    var content: String
+    
+    //MARK: Variables
+    let formatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        return dateFormatter
+    }()
+    
+    init(response: [String: Any?]) {
+        let sourceDict = response["source"] as? [String: Any?] ?? [:]
+        source = Source(response: sourceDict)
+        
+        author = response["author"] as? String ?? ""
+        title = response["title"] as? String ?? ""
+        description = response["description"] as? String ?? ""
+
+        var urlString = response["url"] as? String ?? ""
+        newsLink = URL(string: urlString)
+
+        urlString = response["urlToImage"] as? String ?? ""
+        imageLink = URL(string: urlString)
+        
+        var dateString = response["publishedAt"] as? String ?? ""
+        dateString = dateString.replacingOccurrences(of: "T", with: " ")
+        publishedAt = formatter.date(from: dateString)
+        
+        content = response["content"] as? String ?? ""
     }
     
-    func setData(articleRemote: ArticleRemote) {
-        source = articleRemote.source.name
-        title = articleRemote.title
-        newsLink = articleRemote.newsLink
-        imageLink = articleRemote.imageLink
-        author = articleRemote.author
-        date = articleRemote.publishedAt
-        content = articleRemote.description
+    init(article: ArticleCore) {
+        source = Source(name: article.source)
+        author = article.author
+        title = article.title
+        description = article.content
+        newsLink = article.newsLink
+        imageLink = article.imageLink
+        publishedAt = article.date
+        content = ""
     }
 }

@@ -18,6 +18,7 @@ class TodayViewController: UIViewController {
     private let numberOfHeadlines = 3
     private var currentState: NCWidgetDisplayMode = .compact
     private var completionHandler: (NCUpdateResult) -> Void = {_ in}
+    private let context = CoreDataStack.shared.context
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -27,9 +28,11 @@ class TodayViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+        loader.startAnimating()
         DispatchQueue.main.async {
-            self.loader.startAnimating()
-            self.feed.fetchCoreData()
+            self.context.perform {
+                self.feed.fetchCoreData(in: self.context)
+            }
         }
     }
 }

@@ -22,11 +22,7 @@ class Feed: BaseClass {
         case remote(pageNumber: Int)
     }
     //MARK: Properties
-    private let context: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        context.parent = CoreDataStack.shared.context
-        return context
-    }()
+    private let context = CoreDataStack.shared.context
     private var delegate: FeedProtocol
     private var totalResults: Int = 0
     private var fetchedPage: Int = 0
@@ -47,30 +43,34 @@ class Feed: BaseClass {
         _ = response["status"] as? String ?? "Fail"
         totalResults = response["totalResults"] as? Int ?? 0
         
-        let remoteArticlesDict = response["articles"] as? [[String: Any?]] ?? []
-        parse(remoteArticlesDict)
+        let articlesDict = response["articles"] as? [[String: Any?]] ?? []
+        parse(articlesDict)
         
         hasReachedEnd = totalResults == articles.count
     }
     
-    private func parse(_ remoteArticlesDict: [[String: Any?]]) {
-        var remoteArticles: [ArticleRemote] = []
-        for remoteArticleDict in remoteArticlesDict {
-            let articleRemote = ArticleRemote(response: remoteArticleDict)
-            remoteArticles.append(articleRemote)
-        }
-        for articleRemote in remoteArticles {
-            let article = Article(context: context)
-            article.setData(articleRemote: articleRemote)
+    private func parse(_ articlesDict: [[String: Any?]]) {
+        for articleDict in articlesDict {
+            let article = Article(response: articleDict)
             articles.append(article)
         }
-        try? context.save()
+        
+        context.perform { [weak self] in
+            guard let self = self else { return }
+            for article in self.articles {
+                let articleCore = ArticleCore(context: self.context)
+                articleCore.setData(article)
+            }
+            try? self.context.save()
+        }
     }
     
     private func deleteOld() {
         CustomImageView.clearOldData()
-        let articlesDeleteRequest = Article.deleteAll()
-        _ = try? context.execute(articlesDeleteRequest)
+        context.perform {
+            let articlesDeleteRequest = ArticleCore.deleteAll()
+            _ = try? self.context.execute(articlesDeleteRequest)
+        }
     }
     
     override func didFetchSuccessfully(for params: [String: Any]) {
@@ -86,12 +86,16 @@ class Feed: BaseClass {
 
 //MARK: Available functions
 extension Feed {
-    func fetchCoreData() {
-        articles = (try? context.fetch(Article.fetchAll())) ?? []
-        if articles.isEmpty {
+    func fetchCoreData(in context: NSManagedObjectContext) {
+        let coreArticles = (try? context.fetch(ArticleCore.fetchAll())) ?? []
+        if coreArticles.isEmpty {
             delegate.didFail(with: .retryRemote)
         } else {
             hasReachedEnd = true
+            for coreArticle in coreArticles {
+                let article = Article(article: coreArticle)
+                articles.append(article)
+            }
             delegate.didFetchSuccessful(of: .coreData)
         }
     }

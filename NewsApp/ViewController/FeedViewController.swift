@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SafariServices
+import CustomImageView
 
 class FeedViewController: UIViewController {
     //MARK: Elements
@@ -22,6 +23,7 @@ class FeedViewController: UIViewController {
     private var feedSource = Feed.Source.coreData
     private var currentPage = 1
     private var currentCount = 0
+    private let context = CoreDataStack.shared.context
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -33,8 +35,15 @@ class FeedViewController: UIViewController {
         setupTableView()
         loader.startAnimating()
         DispatchQueue.main.async {
-            self.feed.fetchCoreData()
+            self.context.perform {
+                self.feed.fetchCoreData(in: self.context)
+            }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        saveFeedData()
     }
     
     private func setupTableView() {
@@ -162,5 +171,15 @@ extension FeedViewController: FeedProtocol {
             loader.startAnimating()
         }
         feed.fetch(pageNumber: currentPage)
+    }
+}
+
+//MARK: Helpers
+extension FeedViewController {
+    private func saveFeedData() {
+        if context.hasChanges {
+            context.perform { try? self.context.save() }
+            CustomImageView.saveAllData()
+        }
     }
 }

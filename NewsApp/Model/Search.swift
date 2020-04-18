@@ -40,11 +40,11 @@ class Search: BaseClass {
     override func parse(_ response: [String : Any], for params: [String: Any]) {
         _ = response["status"] as? String ?? "Fail"
         
-        let remoteArticlesDict = response["articles"] as? [[String: Any?]] ?? []
+        let articlesDict = response["articles"] as? [[String: Any?]] ?? []
         if isLatest(params) {
             DispatchQueue.main.async {
                 self.totalResults = response["totalResults"] as? Int ?? 0
-                self.parse(remoteArticlesDict)
+                self.parse(articlesDict)
                 self.hasReachedEnd = self.totalResults == self.articles.count
             }
         }
@@ -56,16 +56,10 @@ class Search: BaseClass {
         return queryFetched == urlQuery
     }
     
-    private func parse(_ remoteArticlesDict: [[String: Any?]]) {
-        var remoteArticles: [ArticleRemote] = []
-        for remoteArticleDict in remoteArticlesDict {
-            let articleRemote = ArticleRemote(response: remoteArticleDict)
-            remoteArticles.append(articleRemote)
-        }
-        for articleRemote in remoteArticles {
-            let article = Article(context: self.context)
-            article.setData(articleRemote: articleRemote)
-            self.articles.append(article)
+    private func parse(_ articlesDict: [[String: Any?]]) {
+        for articleDict in articlesDict {
+            let article = Article(response: articleDict)
+            articles.append(article)
         }
     }
     
