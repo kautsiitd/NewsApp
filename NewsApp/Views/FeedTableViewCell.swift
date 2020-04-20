@@ -49,7 +49,7 @@ extension FeedTableViewCell {
         linkButton.isEnabled = (article.newsLink != nil)
         authorLabel.text = article.author
         dateLabel.text = article.publishedAt?.convertTo(string: "dd MMM h:mm a")
-        descriptionLabel.text = article.content
+        descriptionLabel.text = article.description
         newsImageView.setImage(with: article.imageLink)
     }
 }

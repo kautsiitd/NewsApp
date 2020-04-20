@@ -9,39 +9,35 @@
 import Foundation
 import CoreData
 
-class CoreDataStack {
+final class CoreDataManager {
     //MARK: Properties
-    static let shared = CoreDataStack()
+    private static let shared = CoreDataManager()
     private init() {}
-    let modelName = "NewsApp"
     
-    lazy var context:NSManagedObjectContext = {
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        managedObjectContext.persistentStoreCoordinator = coordinator
-        return managedObjectContext
-    }()
+    private lazy var storeURL = URL.storeURL(for: "group.Kauts.NewsApp", databaseName: "NewsApp")
     
-    lazy var coordinator: NSPersistentStoreCoordinator = {
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-        var storeURL = appDocumentDirectory
-        storeURL.appendPathComponent(modelName)
-        let options = [NSMigratePersistentStoresAutomaticallyOption: true]
-        _ = try? coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
-        return coordinator
-    }()
-    
-    lazy var appDocumentDirectory: URL = {
-        let fileManager = FileManager.default
-        if let url = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.Kauts.NewsApp") {
-            return url
-        }
-        let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
-        return urls.first!
-    }()
-    
-    var managedObjectModel: NSManagedObjectModel = {
+    private lazy var managedObjectModel: NSManagedObjectModel = {
         let bundle = Bundle.main
         let modelURL = bundle.url(forResource: "NewsApp", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
+    
+    private lazy var container: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "NewsApp")
+        let options = [NSMigratePersistentStoresAutomaticallyOption: true]
+        let coordinator = container.persistentStoreCoordinator
+        _ = try? coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
+        return container
+    }()
+}
+
+//MARK: - perform methods
+extension CoreDataManager {
+    static func performOnBackground(_ block: @escaping (NSManagedObjectContext) -> Void) {
+        CoreDataManager.shared.container.performBackgroundTask(block)
+    }
+    static func performOnMain(_ block: @escaping (NSManagedObjectContext) -> Void) {
+        block(CoreDataManager.shared.container.viewContext)
+    }
+
 }

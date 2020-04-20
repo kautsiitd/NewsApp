@@ -22,7 +22,6 @@ class Feed: BaseClass {
         case remote(pageNumber: Int)
     }
     //MARK: Properties
-    private let context = CoreDataStack.shared.context
     private var delegate: FeedProtocol
     private var totalResults: Int = 0
     private var fetchedPage: Int = 0
@@ -55,27 +54,30 @@ class Feed: BaseClass {
             articles.append(article)
         }
         
-        context.perform { [weak self] in
-            guard let self = self else { return }
+        CoreDataManager.performOnBackground({
+            context in
             for article in self.articles {
-                let articleCore = ArticleCore(context: self.context)
+                let articleCore = ArticleCore(context: context)
                 articleCore.setData(article)
             }
-            try? self.context.save()
-        }
+            try? context.save()
+        })
     }
     
     private func deleteOld() {
         CustomImageView.clearOldData()
-        context.perform {
+        CoreDataManager.performOnBackground({
+            context in
             let articlesDeleteRequest = ArticleCore.deleteAll()
-            _ = try? self.context.execute(articlesDeleteRequest)
-        }
+            _ = try? context.execute(articlesDeleteRequest)
+        })
     }
     
     override func didFetchSuccessfully(for params: [String: Any]) {
         //Delete old coreData only when there is new feed fetch data is available
-        if fetchedPage == 1 { deleteOld() }
+        if fetchedPage == 1 {
+            deleteOld()
+        }
         delegate.didFetchSuccessful(of: .remote(pageNumber: fetchedPage))
     }
     

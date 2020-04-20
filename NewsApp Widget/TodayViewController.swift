@@ -18,7 +18,6 @@ class TodayViewController: UIViewController {
     private let numberOfHeadlines = 3
     private var currentState: NCWidgetDisplayMode = .compact
     private var completionHandler: (NCUpdateResult) -> Void = {_ in}
-    private let context = CoreDataStack.shared.context
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -29,11 +28,12 @@ class TodayViewController: UIViewController {
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
         loader.startAnimating()
-        DispatchQueue.main.async {
-            self.context.perform {
-                self.feed.fetchCoreData(in: self.context)
+        CoreDataManager.performOnMain({
+            context in
+            DispatchQueue.main.async {
+                self.feed.fetchCoreData(in: context)
             }
-        }
+        })
     }
 }
 
@@ -94,6 +94,9 @@ extension TodayViewController: FeedProtocol {
         }
         switch source {
         case .coreData:
+            if let article = feed.articles.first,
+                let date = article.publishedAt,
+                Calendar.current.isDateInToday(date) { return }
             feed.fetch(pageNumber: 1)
         default:
             completionHandler(.newData)
