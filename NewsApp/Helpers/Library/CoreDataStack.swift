@@ -31,7 +31,7 @@ final class CoreDataManager {
     }()
 }
 
-//MARK: - perform methods
+//MARK:- Available
 extension CoreDataManager {
     static func performOnBackground(_ block: @escaping (NSManagedObjectContext) -> Void) {
         CoreDataManager.shared.container.performBackgroundTask(block)

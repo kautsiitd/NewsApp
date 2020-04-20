@@ -92,13 +92,21 @@ extension FeedViewController: UITableViewDataSource {
     }
 }
 
-//MARK: UITableViewDelegate
 extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let _ = cell as? LoaderTableViewCell else {
             return
         }
         feed.fetch(nextOf: currentPage)
+    }
+}
+
+extension FeedViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            let article = feed.articles[indexPath.row]
+            CustomImageView.shared.setImage(with: article.imageLink)
+        }
     }
 }
 
