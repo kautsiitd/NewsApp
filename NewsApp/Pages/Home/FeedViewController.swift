@@ -73,8 +73,8 @@ extension FeedViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < feed.articles.count {
-            let identifier = "\(FeedTableViewCell.self)"
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! FeedTableViewCell
+            let identifier = "\(ArticleTableViewCell.self)"
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! ArticleTableViewCell
             cell.delegate = self
             cell.setCell(article: feed.articles[indexPath.row])
             return cell
@@ -110,8 +110,8 @@ extension FeedViewController: UITableViewDataSourcePrefetching {
     }
 }
 
-//MARK: FeedTableViewCellProtocol
-extension FeedViewController: FeedTableViewCellProtocol {
+//MARK: ArticleTableViewCellProtocol
+extension FeedViewController: ArticleTableViewCellProtocol {
     func open(link: URL) {
         let safariViewController = SFSafariViewController(url: link)
         present(safariViewController, animated: true, completion: nil)

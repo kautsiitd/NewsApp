@@ -110,7 +110,7 @@ extension Feed {
     func fetch(pageNumber: Int) {
         if pageNumber <= 1 { articles = [] }
         fetchedPage = pageNumber
-        let params: [String: Any] = ["country": "us", "page": pageNumber]
+        let params: [String: Any] = ["country": "in", "page": pageNumber]
         ApiManager.shared.getRequest(for: params, self)
     }
 }

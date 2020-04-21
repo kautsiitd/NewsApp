@@ -59,8 +59,8 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row < feed.articles.count {
-            let identifier = "\(FeedTableViewCell.self)"
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! FeedTableViewCell
+            let identifier = "\(ArticleTableViewCell.self)"
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier) as! ArticleTableViewCell
             cell.delegate = self
             cell.setCell(article: feed.articles[indexPath.row])
             return cell
@@ -88,8 +88,8 @@ extension SearchViewController: UITableViewDelegate {
     }
 }
 
-//MARK: FeedTableViewCellProtocol
-extension SearchViewController: FeedTableViewCellProtocol {
+//MARK: ArticleTableViewCellProtocol
+extension SearchViewController: ArticleTableViewCellProtocol {
     func open(link: URL) {
         let safariViewController = SFSafariViewController(url: link)
         present(safariViewController, animated: true, completion: nil)

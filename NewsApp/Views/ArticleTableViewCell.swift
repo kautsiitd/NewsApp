@@ -1,5 +1,5 @@
 //
-//  FeedTableViewCell.swift
+//  ArticleTableViewCell.swift
 //  NewsApp
 //
 //  Created by Kautsya Kanu on 02/12/19.
@@ -9,11 +9,11 @@
 import UIKit
 import CustomImageView
 
-protocol FeedTableViewCellProtocol {
+protocol ArticleTableViewCellProtocol {
     func open(link: URL)
 }
 
-class FeedTableViewCell: UITableViewCell {
+class ArticleTableViewCell: UITableViewCell {
     
     //MARK: Elements
     @IBOutlet private weak var titleLabel: UILabel!
@@ -24,7 +24,7 @@ class FeedTableViewCell: UITableViewCell {
     @IBOutlet private weak var descriptionLabel: UILabel!
     
     //MARK: Properties
-    var delegate: FeedTableViewCellProtocol?
+    var delegate: ArticleTableViewCellProtocol?
     private var article: Article?
     
     override func prepareForReuse() {
@@ -37,7 +37,7 @@ class FeedTableViewCell: UITableViewCell {
     }
 }
 
-extension FeedTableViewCell {
+extension ArticleTableViewCell {
     @IBAction func openNews() {
         guard let newsLink = article?.newsLink else { return }
         delegate?.open(link: newsLink)
