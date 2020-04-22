@@ -25,6 +25,11 @@ class Feed: BaseClass {
     private var delegate: FeedProtocol
     private var totalResults: Int = 0
     private var fetchedPage: Int = 0
+    var context: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.parent = CoreDataManager.shared.privateContext
+        return context
+    }()
     
     var articles: [Article] = []
     var hasReachedEnd: Bool = false
@@ -49,35 +54,37 @@ class Feed: BaseClass {
     }
     
     private func parse(_ articlesDict: [[String: Any?]]) {
+        var newArticles: [Article] = []
         for articleDict in articlesDict {
             let article = Article(response: articleDict)
-            articles.append(article)
+            newArticles.append(article)
         }
+        articles.append(contentsOf: newArticles)
         
-        CoreDataManager.performOnBackground({
-            context in
-            for article in self.articles {
-                let articleCore = ArticleCore(context: context)
+        context.perform {
+            if self.fetchedPage == 1 {
+                self.deleteOld()
+            }
+            for article in newArticles {
+                let articleCore = ArticleCore(context: self.context)
                 articleCore.setData(article)
             }
-            try? context.save()
-        })
+            self.saveAllData()
+        }
+    }
+    
+    private func saveAllData() {
+        try? self.context.save()
+        CoreDataManager.shared.saveAllData()
     }
     
     private func deleteOld() {
         CustomImageView.clearOldData()
-        CoreDataManager.performOnBackground({
-            context in
-            let articlesDeleteRequest = ArticleCore.deleteAll()
-            _ = try? context.execute(articlesDeleteRequest)
-        })
+        let articlesDeleteRequest = ArticleCore.deleteAll()
+        _ = try? context.execute(articlesDeleteRequest)
     }
     
     override func didFetchSuccessfully(for params: [String: Any]) {
-        //Delete old coreData only when there is new feed fetch data is available
-        if fetchedPage == 1 {
-            deleteOld()
-        }
         delegate.didFetchSuccessful(of: .remote(pageNumber: fetchedPage))
     }
     
@@ -88,7 +95,7 @@ class Feed: BaseClass {
 
 //MARK: Available functions
 extension Feed {
-    func fetchCoreData(in context: NSManagedObjectContext) {
+    func fetchCoreData() {
         let coreArticles = (try? context.fetch(ArticleCore.fetchAll())) ?? []
         if coreArticles.isEmpty {
             delegate.didFail(with: .retryRemote)

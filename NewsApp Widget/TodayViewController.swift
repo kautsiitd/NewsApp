@@ -28,12 +28,11 @@ class TodayViewController: UIViewController {
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
         loader.startAnimating()
-        CoreDataManager.performOnMain({
-            context in
-            DispatchQueue.main.async {
-                self.feed.fetchCoreData(in: context)
+        DispatchQueue.main.async {
+            self.feed.context.perform {
+                self.feed.fetchCoreData()
             }
-        })
+        }
     }
 }
 

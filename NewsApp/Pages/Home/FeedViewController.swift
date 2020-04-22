@@ -33,12 +33,11 @@ class FeedViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         loader.startAnimating()
-        CoreDataManager.performOnMain({
-            context in
-            DispatchQueue.main.async {
-                self.feed.fetchCoreData(in: context)
+        DispatchQueue.main.async {
+            self.feed.context.perform {
+                self.feed.fetchCoreData()
             }
-        })
+        }
     }
     
     private func setupTableView() {
@@ -98,15 +97,6 @@ extension FeedViewController: UITableViewDelegate {
             return
         }
         feed.fetch(nextOf: currentPage)
-    }
-}
-
-extension FeedViewController: UITableViewDataSourcePrefetching {
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        for indexPath in indexPaths {
-            let article = feed.articles[indexPath.row]
-            CustomImageView.shared.setImage(with: article.imageLink)
-        }
     }
 }
 

@@ -11,7 +11,7 @@ import CoreData
 
 final class CoreDataManager {
     //MARK: Properties
-    private static let shared = CoreDataManager()
+    static let shared = CoreDataManager()
     private init() {}
     
     private lazy var storeURL = URL.storeURL(for: "group.Kauts.NewsApp", databaseName: "NewsApp")
@@ -29,15 +29,28 @@ final class CoreDataManager {
         _ = try? coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
         return container
     }()
+    
+    lazy var privateContext: NSManagedObjectContext = {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.persistentStoreCoordinator = container.persistentStoreCoordinator
+        return context
+    }()
 }
 
-//MARK:- Available
+//MARK:- Available Functions
 extension CoreDataManager {
-    static func performOnBackground(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        CoreDataManager.shared.container.performBackgroundTask(block)
+    func saveAllData() {
+        privateContext.perform {
+            if self.privateContext.hasChanges {
+                try? self.privateContext.save()
+            }
+        }
     }
-    static func performOnMain(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        block(CoreDataManager.shared.container.viewContext)
+    
+    func deleteOldData() {
+        privateContext.perform {
+            let imageDeleteRequest = ArticleCore.deleteAll()
+            _ = try? self.privateContext.execute(imageDeleteRequest)
+        }
     }
-
 }
