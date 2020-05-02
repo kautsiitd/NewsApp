@@ -98,6 +98,36 @@ extension FeedViewController: UITableViewDelegate {
         }
         feed.fetch(nextOf: currentPage)
     }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let article = feed.articles[indexPath.row]
+        let share = UIContextualAction(style: .normal, title: "Share", handler: {
+            action ,view ,completionHandler in
+            self.share(article)
+            completionHandler(true)
+        })
+        share.backgroundColor = .red
+        share.image = UIImage(systemName: "square.and.arrow.up")
+        
+        return UISwipeActionsConfiguration(actions: [share])
+    }
+    
+    private func share(_ article: Article) {
+        guard let link = article.newsLink else { return }
+        let shareViewController = UIActivityViewController(activityItems: [link], applicationActivities: nil)
+        self.present(shareViewController, animated: true, completion: nil)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let bookmarkToogle = UIContextualAction(style: .normal, title: "", handler: {
+            action ,view ,completionHandler in
+            completionHandler(true)
+        })
+        bookmarkToogle.backgroundColor = .blue
+        bookmarkToogle.image = UIImage(systemName: "book")
+        
+        return UISwipeActionsConfiguration(actions: [bookmarkToogle])
+    }
 }
 
 //MARK: ArticleTableViewCellProtocol
