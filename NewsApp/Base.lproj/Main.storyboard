@@ -63,7 +63,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="483"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Q0-1M-gIa">
+                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Q0-1M-gIa">
                                                     <rect key="frame" x="14" y="16" width="35.5" height="21.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -121,7 +121,7 @@
                                                 <constraint firstItem="FUB-Vg-zvr" firstAttribute="firstBaseline" secondItem="yN2-q8-ndB" secondAttribute="firstBaseline" id="Uvm-y8-Xkf"/>
                                                 <constraint firstAttribute="bottom" secondItem="Mx8-7L-kcs" secondAttribute="bottom" id="VYu-mG-rmk"/>
                                                 <constraint firstItem="FUB-Vg-zvr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="yN2-q8-ndB" secondAttribute="trailing" constant="50" id="Z9c-Kh-qFK"/>
-                                                <constraint firstItem="yDy-xZ-IN2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q0-1M-gIa" secondAttribute="trailing" constant="50" id="Zgd-LX-Jfr"/>
+                                                <constraint firstItem="yDy-xZ-IN2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Q0-1M-gIa" secondAttribute="trailing" constant="10" id="Zgd-LX-Jfr"/>
                                                 <constraint firstItem="yDy-xZ-IN2" firstAttribute="centerY" secondItem="5Q0-1M-gIa" secondAttribute="centerY" id="bgE-gl-4Xb"/>
                                                 <constraint firstAttribute="trailing" secondItem="FUB-Vg-zvr" secondAttribute="trailing" constant="14" id="csL-pB-LKk"/>
                                                 <constraint firstItem="5Q0-1M-gIa" firstAttribute="top" secondItem="6zE-9X-60z" secondAttribute="top" constant="16" id="iRi-yh-tcQ"/>
