@@ -101,15 +101,6 @@ extension FeedViewController: UITableViewDelegate {
     }
 }
 
-extension FeedViewController: UITableViewDataSourcePrefetching {
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        for indexPath in indexPaths {
-            let article = feed.articles[indexPath.row]
-            CustomImageView.shared.setImage(with: article.imageLink)
-        }
-    }
-}
-
 //MARK: FeedTableViewCellProtocol
 extension FeedViewController: FeedTableViewCellProtocol {
     func open(link: URL) {

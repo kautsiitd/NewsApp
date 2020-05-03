@@ -12,6 +12,8 @@
 		630C164923953BE600349D5A /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630C164823953BE600349D5A /* Feed.swift */; };
 		6335F5E023B42B2200ED09A0 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335F5DF23B42B2200ED09A0 /* CustomError.swift */; };
 		6335F5E623B5844300ED09A0 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6335F5E523B5844300ED09A0 /* Date.swift */; };
+		63397F0C245D000D00307B88 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63397F0B245D000D00307B88 /* IntentHandler.swift */; };
+		63397F10245D000D00307B88 /* NewsAppSiri.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 63397F09245D000D00307B88 /* NewsAppSiri.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		63486FAE239A01A100D9200A /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63486FAD239A01A100D9200A /* CoreDataStack.swift */; };
 		636DE07523925C1C00305557 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636DE07423925C1C00305557 /* AppDelegate.swift */; };
 		636DE07723925C1C00305557 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636DE07623925C1C00305557 /* SceneDelegate.swift */; };
@@ -50,6 +52,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		63397F0E245D000D00307B88 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 636DE06923925C1C00305557 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63397F08245D000D00307B88;
+			remoteInfo = NewsAppSiri;
+		};
 		63DF505F23CED83D009486D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 636DE06923925C1C00305557 /* Project object */;
@@ -95,6 +104,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				63397F10245D000D00307B88 /* NewsAppSiri.appex in Embed App Extensions */,
 				63DF506123CED83D009486D5 /* NewsApp Widget.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -108,6 +118,9 @@
 		630C164823953BE600349D5A /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		6335F5DF23B42B2200ED09A0 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		6335F5E523B5844300ED09A0 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		63397F09245D000D00307B88 /* NewsAppSiri.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NewsAppSiri.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		63397F0B245D000D00307B88 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		63397F0D245D000D00307B88 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63486FAD239A01A100D9200A /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		636DE07123925C1C00305557 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		636DE07423925C1C00305557 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -138,6 +151,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		63397F06245D000D00307B88 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		636DE06E23925C1C00305557 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -158,12 +178,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63397F0A245D000D00307B88 /* NewsAppSiri */ = {
+			isa = PBXGroup;
+			children = (
+				63397F0B245D000D00307B88 /* IntentHandler.swift */,
+				63397F0D245D000D00307B88 /* Info.plist */,
+			);
+			path = NewsAppSiri;
+			sourceTree = "<group>";
+		};
 		636DE06823925C1C00305557 = {
 			isa = PBXGroup;
 			children = (
 				63DF50A123D09F63009486D5 /* CustomImageView.xcodeproj */,
 				636DE07323925C1C00305557 /* NewsApp */,
 				63DF505823CED83D009486D5 /* NewsApp Widget */,
+				63397F0A245D000D00307B88 /* NewsAppSiri */,
 				63DF505523CED83D009486D5 /* Frameworks */,
 				636DE07223925C1C00305557 /* Products */,
 			);
@@ -174,6 +204,7 @@
 			children = (
 				636DE07123925C1C00305557 /* NewsApp.app */,
 				63DF505423CED83D009486D5 /* NewsApp Widget.appex */,
+				63397F09245D000D00307B88 /* NewsAppSiri.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -303,6 +334,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		63397F08245D000D00307B88 /* NewsAppSiri */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63397F14245D000D00307B88 /* Build configuration list for PBXNativeTarget "NewsAppSiri" */;
+			buildPhases = (
+				63397F05245D000D00307B88 /* Sources */,
+				63397F06245D000D00307B88 /* Frameworks */,
+				63397F07245D000D00307B88 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NewsAppSiri;
+			productName = NewsAppSiri;
+			productReference = 63397F09245D000D00307B88 /* NewsAppSiri.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		636DE07023925C1C00305557 /* NewsApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 636DE08523925C2200305557 /* Build configuration list for PBXNativeTarget "NewsApp" */;
@@ -317,6 +365,7 @@
 			);
 			dependencies = (
 				63DF506023CED83D009486D5 /* PBXTargetDependency */,
+				63397F0F245D000D00307B88 /* PBXTargetDependency */,
 			);
 			name = NewsApp;
 			productName = NewsApp;
@@ -347,10 +396,13 @@
 		636DE06923925C1C00305557 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1130;
+				LastSwiftUpdateCheck = 1140;
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Kautsya Kanu";
 				TargetAttributes = {
+					63397F08245D000D00307B88 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
 					636DE07023925C1C00305557 = {
 						CreatedOnToolsVersion = 11.2.1;
 					};
@@ -380,6 +432,7 @@
 			targets = (
 				636DE07023925C1C00305557 /* NewsApp */,
 				63DF505323CED83D009486D5 /* NewsApp Widget */,
+				63397F08245D000D00307B88 /* NewsAppSiri */,
 			);
 		};
 /* End PBXProject section */
@@ -395,6 +448,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		63397F07245D000D00307B88 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		636DE06F23925C1C00305557 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -417,6 +477,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		63397F05245D000D00307B88 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63397F0C245D000D00307B88 /* IntentHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		636DE06D23925C1C00305557 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -463,6 +531,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		63397F0F245D000D00307B88 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63397F08245D000D00307B88 /* NewsAppSiri */;
+			targetProxy = 63397F0E245D000D00307B88 /* PBXContainerItemProxy */;
+		};
 		63DF506023CED83D009486D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 63DF505323CED83D009486D5 /* NewsApp Widget */;
@@ -498,6 +571,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		63397F11245D000D00307B88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A8UX99CMMW;
+				INFOPLIST_FILE = NewsAppSiri/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Kauts.NewsApp.NewsAppSiri;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		63397F12245D000D00307B88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A8UX99CMMW;
+				INFOPLIST_FILE = NewsAppSiri/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Kauts.NewsApp.NewsAppSiri;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		636DE08323925C2200305557 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -699,6 +812,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		63397F14245D000D00307B88 /* Build configuration list for PBXNativeTarget "NewsAppSiri" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63397F11245D000D00307B88 /* Debug */,
+				63397F12245D000D00307B88 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		636DE06C23925C1C00305557 /* Build configuration list for PBXProject "NewsApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
